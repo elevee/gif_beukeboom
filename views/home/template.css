@@ -1,0 +1,37 @@
+.day {
+	text-align: center;
+	font-size: 28px;
+}
+
+table {
+	/*width: 50%;*/
+	margin: 0 auto;
+}
+
+table {
+	font-size: 36px;
+}
+
+.team_home.loser , .team_away.loser {
+	/*background-color: #ffddee; /*pink;*/
+	color: gray;
+	filter: grayscale();
+}
+
+table tr:hover {
+	background-color: gray !important; 
+	cursor: pointer;
+}
+
+.team_home {
+	text-align: right;
+}
+
+table .score {
+	font-size: 18px;
+	text-align: center;
+}
+
+.score_detail {
+	font-size: 14px;
+}

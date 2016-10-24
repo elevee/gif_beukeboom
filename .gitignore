@@ -1,4 +1,6 @@
-_env
+.DS_Store
+_env.php
 logs/
 composer.phar
 .htaccess
+vendor/

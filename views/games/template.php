@@ -1,0 +1,131 @@
+<?php
+$applicablePeriods = array();
+foreach ($game["goals"] as $k => $gl) {
+	if (!in_array($gl["period"], $applicablePeriods)){
+		$applicablePeriods[] = $gl["period"]; 
+	}
+}
+
+function displayGoals($period, $goals, &$applicablePeriods) {
+	if (isset($period)){
+		$output = "";
+		if (!goalScoredInPeriod($period, $goals, $applicablePeriods)){
+			return "No scoring.";
+		}
+		foreach ($goals as $k => $gl) {
+			if($gl["period"] == $period){
+				// echo "<pre>";
+				// print_r($gl);
+				// echo "</pre>";
+				$output .= "<div class='goal ". ($gl["isHomeTeam"] ? "home":"away")."Goal'>";
+					$output .= "<h4>".$gl["scorer"]."</h4>";
+					$output .= $gl["video_linkout"] ? "<h7>("."<a href='".$gl["video_linkout"]."' target='_blank'>"."mp4"."</a>)</h7>" : "";
+					$output .= "<div class='".($gl["gifUri"] ? "goalGif" : "goalPlaceholder")."' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
+						// $output .= "<a href='".$gl["video_linkout"]."' target='_blank'>";
+						if($gl["gifUri"]){
+							$output .= "<img src='".$gl["placeholder_img"]."' data-gif='".$gl["gifUri"]."' />";
+							$output .= "<span class='time'>".$gl["time"]."</span>";
+						} else if ($gl["placeholder_img"]) { // No GIF yet!
+							$output .= "<img src='".$gl["placeholder_img"]."' />";
+							$output .= "<span class='processing'>Processing</span>";
+						} else {
+							$output .= "<p>No goal video available to GIF!</p>";
+						}
+						// $output .= "</a>";
+					$output .= "</div>";
+				$output .= "</div>";
+			}
+		}
+		return $output;
+	}
+}
+
+function goalScoredInPeriod($period, $goals, &$applicablePeriods){
+	if (isset($goals) && is_array($goals)){
+		foreach ($goals as $k => $gl) {
+			if(in_array($period, $applicablePeriods)){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+if(isset($game) && is_array($game)){
+	// print_r($game);
+	// print_r($game["goals"]);
+	echo("<section class='game large-12 columns' data-gameId='".$state['id']."'>");
+		echo("<div class='row'>");
+			echo("<div class='large-12 columns matchup'>");
+				echo("<div class='large-5 small-5 columns away_team'>");
+					echo("<div class='team_logo'>");
+						echo("<img src='http://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/".$game["awayAbbrev"].".png&h=400' />");
+					echo("</div>");
+					echo("<div class='row'>");
+						echo("<span>".$game["awayTeamName"]."</span>");
+					echo("</div>");
+					echo("<div class='row'>");
+						echo("<h1 class='score'>".$game["awayTeamScore"]."</h1>");
+					echo("</div>");
+				echo("</div>");
+				echo("<div class='large-2 small-2 columns status'>");
+					echo("<span>".$game["status"]);
+						if ($game["status"] == "In Progress"){
+							echo("<br />".$game["time_left"]."  ".$game["period"]);
+						}
+					echo("</span>");
+					echo("</div>");
+				echo("<div class='large-5 small-5 columns home_team'>");
+					echo("<div class='team_logo'>");
+						echo("<img src='http://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/".$game["homeAbbrev"].".png&h=400' />");
+					echo("</div>");
+					echo("<div class='row'>");
+						echo("<span>".$game["homeTeamName"]."</span>");
+					echo("</div>");
+					echo("<div class='row'>");
+						echo("<h1 class='score'>".$game["homeTeamScore"]."</h1>");
+					echo("</div>");
+				echo("</div>");
+			echo("</div>");
+		echo("</div>");
+		echo("<div class='row row-padding'>");
+		 echo("<ul class='goals accordion large-12 columns' data-accordion role='tablist'>");
+		  echo("<li class='accordion-navigation'>");
+		        echo("<a href='#period1' role='tab' class='accordion-title' id='period1-heading' aria-controls='period1'>First Period</a>");
+		        echo("<div id='period1' class='accordion-content active' role='tabpanel' data-tab-content aria-labelledby='period1-heading'>");
+	        		echo(displayGoals("1", $game["goals"], $applicablePeriods));
+		        echo("</div>");
+		    echo("</li>");
+		    echo("<li class='accordion-navigation'>");
+		        echo("<a href='#period2' role='tab' class='accordion-title' id='period2-heading' aria-controls='period2'>Second Period</a>");
+		        echo("<div id='period2' class='accordion-content' role='tabpanel' data-tab-content aria-labelledby='period2-heading'>");
+			        echo(displayGoals("2", $game["goals"], $applicablePeriods));
+		        echo("</div>");
+		    echo("</li>");
+		    echo("<li class='accordion-navigation'>");
+		        echo("<a href='#period3' role='tab' class='accordion-title' id='period3-heading' aria-controls='period3'>Third Period</a>");
+		        echo("<div id='period3' class='accordion-content' role='tabpanel' data-tab-content aria-labelledby='period3-heading'>");
+			        echo(displayGoals("3", $game["goals"], $applicablePeriods));
+		        echo("</div>");
+		    echo("</li>");
+			if(goalScoredInPeriod("4", $game["goals"], $applicablePeriods)) {
+				echo("<li class='accordion-navigation'>");
+			        echo("<a href='#period4' role='tab' class='accordion-title' id='period4-heading' aria-controls='period4'>Overtime</a>");
+			        echo("<div id='period4' class='accordion-content' role='tabpanel' data-tab-content aria-labelledby='period4-heading'>");
+			        	echo(displayGoals("4", $game["goals"], $applicablePeriods));
+			        echo("</div>");
+			    echo("</li>");
+			}
+			if(goalScoredInPeriod("5", $game["goals"], $applicablePeriods)) {
+			    echo("<li class='accordion-navigation'>");
+			        echo("<a href='#period5' role='tab' class='accordion-title' id='period5-heading' aria-controls='period5'>Shootout</a>");
+			        echo("<div id='period5' class='accordion-content' role='tabpanel' data-tab-content aria-labelledby='period5-heading'>");
+				        echo(displayGoals("5", $game["goals"], $applicablePeriods));
+			        echo("</div>");
+			    echo("</li>");
+			}
+		  echo("</ul>");
+		echo("</div>");
+	 echo("</div>");
+	echo("</section>");
+}

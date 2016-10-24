@@ -1,0 +1,95 @@
+.matchup {
+	font-size: 22px;
+	font-weight: 100;
+	text-align: center;
+}
+
+h4 {
+	margin: 0px;
+	padding: 0px;
+}
+
+h7 {
+	font-size: 12px;
+}
+
+.accordion-content {
+	text-align: center;
+}
+
+.away_team, .home_team {
+	font-size: 48px;
+	position: relative;
+}
+
+.home_team, .home_team .score, .homeGoal {
+	text-align: right;
+}
+
+.away_team, .away_team .score, .awayGoal {
+	text-align: left;
+}
+
+.team_logo img {
+	width: 300px;
+	opacity: 0.2;
+	position: absolute;
+	z-index: -1;
+	top: -50px;
+}
+
+.away_team .team_logo {
+	float: left;
+}
+
+.home_team .team_logo img {
+	right: 0px;
+}
+
+.home_team .team_logo {
+	/*float: right;*/
+}
+
+.accordion-navigation a {
+	text-align: center;
+}
+
+.accordion-content h4 {
+	font-size: 30px;
+	font-weight: 300;
+}
+
+.homeGoal .goalPlaceholder .processing {
+	position: absolute;
+	top: 140px; 
+	right: 130px; 
+	width: 100%; 
+	font-size: 20px;
+}
+
+.awayGoal .goalPlaceholder .processing {
+	position: absolute;
+	top: 140px; 
+	left: 130px; 
+	width: 100%; 
+	font-size: 20px;
+}
+
+.goal {
+	position: relative;
+}
+
+.goal img {
+	width: 400px;
+}
+
+.goal .time {
+	/*text-align: center;*/
+	position: absolute;
+	top: 50%;
+    left: 48%;
+}
+
+.goalPlaceholder img {
+	opacity: 0.5;
+}
