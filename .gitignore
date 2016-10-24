@@ -1,0 +1,4 @@
+_env
+logs/
+composer.phar
+.htaccess
