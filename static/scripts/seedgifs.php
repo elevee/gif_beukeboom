@@ -14,6 +14,7 @@ include_once(dirname(__FILE__)."/slack_webhook.php");
 
 $toProcess = array();
 $today = date("Y-m-d");
+// $customDate = "2016-10-24";
 $games = getGamesForDay($today);
 echo("\n");
 // print_r(getGamesForDay("2016-10-12"));

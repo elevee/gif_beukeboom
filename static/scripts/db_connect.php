@@ -17,9 +17,9 @@ include($path);
 // echo("<br> user is ". $DB_USER. "<br>");
 $user 		= $DB_USER;
 $password 	= $DB_PASS;
-$db 		= 'gifbarn';
-$host 		= 'localhost';
-$port 		= 8889;
+$db 		= $DB_NAME;
+$host 		= $DB_HOST;
+$port 		= $DB_PORT;
 $charset 	= "utf8";
 global $pdo;
 
@@ -33,7 +33,7 @@ try {
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	// $pdo->exec('SET NAMES "utf8"');
 } catch (PDOException $e) {
-	echo("Unable to connect to the DB server." . $e."\n");
+	echo("Unable to connect to the DB server."); //$e."\n");
 	exit();
 }
 // echo("DB Connection Succeeded.\n");
@@ -102,7 +102,7 @@ function gifExists($goalId, &$pdo){
 			}
 		} catch (PDOException $e) {
 			echo("Error checking to see if ".$goal['id']." exists.\n");
-			echo($e->getMessage());
+			// echo($e->getMessage());
 		}
 	}
 	return false;
@@ -121,7 +121,7 @@ function getGif($goalId, &$pdo){
 			}
 		} catch (PDOException $e) {
 			echo("Error retrieving ".$goal['id']." URI.\n");
-			echo($e->getMessage());
+			// echo($e->getMessage());
 		}
 	}
 	return false;
