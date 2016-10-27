@@ -3,5 +3,5 @@ _env.php
 logs/
 composer.phar
 .htaccess
-vendor/
+/vendor/
 sftp-config.json
