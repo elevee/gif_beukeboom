@@ -4,7 +4,7 @@ if (isset($state['loginError'])) {
 	echo("<p>".$state['loginError']."</p>");
 }
 
-echo("<div class='large-4 large-centered columns'>");
+echo("<div class='large-4 large-centered columns' style='float: none;'>");
 	echo("<div class='login-box'>");
 		echo("<h1>Log In</h1>");
 		echo("<p>Please log in to view the page you requested.</p>");

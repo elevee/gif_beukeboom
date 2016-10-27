@@ -34,8 +34,12 @@ $(document).ready(function(){
 					detail = timeLeft+" "+current_period;
 				}
 
-				if(status == "Final"){ 
+				if(detailedState == "Final"){ 
 					isLoser = (parseInt(awayScore) < parseInt(homeScore) ? "away" : "home");
+				}
+
+				if(detailedState == "Scheduled"){
+					detail = toLocalTime( games[i]["gameDate"] );
 				}
 
 				var str = "";
@@ -51,6 +55,31 @@ $(document).ready(function(){
 				$games.append(str);
 			}
 		});
+	}
+
+	function toLocalTime(utc){
+		if(utc && utc.length > 0){
+			var gameTime = new Date(utc);
+			var hours = gameTime.getHours();
+			var minutes = gameTime.getMinutes();
+
+			var suffix = "AM";
+
+			if (hours >= 12) {
+			    suffix = "PM";
+			    hours = hours - 12;
+			}
+
+			if (hours == 0) {
+			    hours = 12;
+			}
+
+			if (minutes < 10) {
+			    minutes = "0" + minutes;
+			}
+
+			return hours + ":" + minutes + " " + suffix;
+		}
 	}
 
 	//quick example of goal data:

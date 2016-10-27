@@ -11,23 +11,23 @@ include_once(dirname(__FILE__)."/db_connect.php");
 include_once(dirname(__FILE__)."/s3_functions.php");
 include_once(dirname(__FILE__)."/slack_webhook.php");
 
-
 $toProcess = array();
 $today = date("Y-m-d");
-// $customDate = "2016-10-24";
-$games = getGamesForDay($today);
+
+//in case we want custom, put date as arg 1.
+$date = (isset($argv[1]) && is_string($argv[1])) ? $argv[1] : $today; //"2016-10-26"; 
+$games = getGamesForDay($date);
 echo("\n");
-// print_r(getGamesForDay("2016-10-12"));
 
 echo("games retrieved: \n");
 print_r($games);
 echo("\n");
-// exit();
+
 foreach ($games as $i => $g) {
 	$toProcess[$g] = getGoalsForGame(strval($g));
 }
-echo("PROCESS: \n");
-print_r($toProcess);
+// echo("PROCESS: \n");
+// print_r($toProcess);
 
 // echo("\n");
 foreach($toProcess as $gameId => $goals){
@@ -53,9 +53,10 @@ foreach($toProcess as $gameId => $goals){
 						echo("Getting Goal info... \n");
 						$_r = getGoalInfo($goal['id']);
 						$_s = getScoreInfo($_r, $gameId);
-						echo("Notifying Slack! \n");
-						// print_r($_r);
-						postToSlack($_r, $_s, $url, $response["uri"]);
+						if ($date == $today){
+							echo("Notifying Slack! \n");
+							postToSlack($_r, $_s, $url, $response["uri"]);
+						}
 					}
 				} else {
 					echo($goal['id']."  Failed to Upload! \n");

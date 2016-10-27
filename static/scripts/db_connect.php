@@ -48,13 +48,13 @@ function addGameToDB($gameId, &$pdo){
 			$count = $stmt->fetch();
 			if ($count[0] == 0){ //fetch returns an array
 				try {
-					$sql = "INSERT INTO games VALUES (:gameId);";
+					$sql = "INSERT INTO games (id) VALUES (:gameId);";
 					$stmt = $pdo->prepare($sql);
 					$stmt->execute(['gameId' => $gameId]);
 					echo("Game $gameId added to DB. \n");
 					return true;
 				} catch (PDOException $e) {
-					echo("Error adding Game $gameId to Game table of DB.\n");
+					echo("Error adding Game $gameId to Game table of DB.\n".$e);
 				}
 			} else {
 				echo("Game already created for $gameId\n");
@@ -71,16 +71,16 @@ function addGifToDB($goal, &$pdo){
 	if (isset($goal) && is_array($goal)){
 		if(!gifExists($goal['id'], $pdo)){
 			try {
-				$sql = "INSERT INTO highlights VALUES (:id, :type, :gameId, :uri);";
+				$sql = "INSERT INTO highlights (id, type, gameId, gif_uri) VALUES (:id, :type, :gameId, :uri);";
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindValue(':id', $goal['id']);
-				$stmt->bindValue(':type', "GOAL");
+				$stmt->bindValue(':type', 'GOAL');
 				$stmt->bindValue(':gameId', $goal['gameId']);
 				$stmt->bindValue(':uri', $goal['uri']);
 				echo("Adding Goal ".$goal['id']." to DB. \n");
 				return $stmt->execute(); //true if successful
 			} catch (PDOException $e) {
-				echo("Error adding Goal ".$goal['id']." to Highlight table of DB.\n");
+				echo("Error adding Goal ".$goal['id']." to Highlight table of DB.\n". $e);
 			}
 		} else {
 			echo("Goal ".$goal['id']." already exists. \n");
@@ -88,6 +88,40 @@ function addGifToDB($goal, &$pdo){
 	}
 	return false;
 }
+
+function deleteGifFromDB($goalId){
+	global $pdo;
+	if (isset($goal) && is_array($goal)){
+		if(gifExists($goalId, $pdo)){
+			try {
+				$sql = "DELETE FROM highlights WHERE id = :goalId;";
+				$stmt = $pdo->prepare($sql);
+				$stmt->bindValue(':goalId', $goalId);
+				echo("Deleting Goal ".$goalId." from DB. \n");
+				return $stmt->execute(); //true if successful
+			} catch (PDOException $e) {
+				echo("Error removing Goal ".$goalId." from Highlight table of DB.\n". $e);
+			}
+		} else {
+			echo("GIF ".$goalId." doesn't even exist, fella. \n");
+		}
+	}
+	return false;
+}
+
+function seedGifsFromDay($day){
+	if(isset($day) && is_string($day)){
+		try {
+			$cmd = "cd ".dirname(__FILE__)."/ && php seedgifs.php ".$day;
+			echo($cmd);
+			// escapeshellarg(exec($cmd));
+			echo("GIF processing complete for ".$day.".");
+		} catch (Exception $e) {
+			echo("Error seeding GIFs for ".$day.":  ". $e->getMessage() . "\n");
+		}
+	}
+}
+// seedGifsFromDay("2016-10-25");
 
 function gifExists($goalId, &$pdo){
 	//Find out if we already converted the GIF

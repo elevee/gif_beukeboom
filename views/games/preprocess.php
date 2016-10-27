@@ -1,8 +1,8 @@
 <?php
 include_once(dirname(__FILE__)."/../../static/scripts/api.php");
-if(!function_exists('addGifToDB')){ //have had errors on multiple includes
-	include_once(dirname(__FILE__)."/../../static/scripts/db_connect.php");	
-}
+// if(!function_exists('addGameToDB')){ //have had errors on multiple includes
+include_once(dirname(__FILE__)."/../../static/scripts/db_connect.php");	
+// }
 
 // echo("Preprocessing game");
 $gameId = trim($state['id']); //scrub ID somehow to rid it of injection

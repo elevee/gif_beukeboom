@@ -1,6 +1,10 @@
 <?php
 include_once "_env.php";
 
+// echo("\n");
+// echo(sha512(''.$salt));
+// echo("\n");
+
 function userIsLoggedIn(){
 	global $salt;
 	global $state;
@@ -46,7 +50,8 @@ function userIsLoggedIn(){
 
 function userInDB($email, $pw){
 	// echo("checking to see if ". $email." with the password ". $pw ." is in the DB. <br>");
-	include dirname(__FILE__)."/static/scripts/db_connect.php";
+	include_once(dirname(__FILE__)."/static/scripts/db_connect.php");
+	global $pdo;
 	try {
 		$sql = 'SELECT COUNT(*) FROM users WHERE email = :email AND password = :pw';
 		$s = $pdo->prepare($sql);
@@ -55,7 +60,7 @@ function userInDB($email, $pw){
 		$s->execute();
 	} catch (PDOException $e) {
 		$error = "Error finding user in DB.". $e;
-		include dirname(__FILE__)."/views/partials/_error.php";
+		include_once(dirname(__FILE__)."/views/partials/_error.php");
 		exit();
 	}
 	$row = $s->fetch();
