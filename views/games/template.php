@@ -21,7 +21,7 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 					$output .= "<h4>".$gl["scorer"]."</h4>";
 					$output .= $gl["video_linkout"] ? "<h7>("."<a href='".$gl["video_linkout"]."' target='_blank'>"."mp4"."</a>)</h7>" : "";
 					$output .= "<div class='".($gl["gifUri"] ? "goalGif" : "goalPlaceholder")."' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
-						// $output .= "<a href='".$gl["video_linkout"]."' target='_blank'>";
+						// $output .= "<div class='large-12 columns' >";
 						if($gl["gifUri"]){
 							$output .= "<img src='".$gl["placeholder_img"]."' data-gif='".$gl["gifUri"]."' />";
 							$output .= "<span class='time'>".$gl["time"]."</span>";
@@ -31,7 +31,7 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 						} else {
 							$output .= "<p>No goal video available to GIF!</p>";
 						}
-						// $output .= "</a>";
+						// $output .= "</div>";
 					$output .= "</div>";
 				$output .= "</div>";
 			}

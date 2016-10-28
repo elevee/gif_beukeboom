@@ -79,8 +79,22 @@ h7 {
 	position: relative;
 }
 
-.goal img {
+.goalGif {
 	width: 400px;
+}
+
+.homeGoal .goalGif {
+	margin-left: auto;
+    margin-right: 0px;
+}
+
+.awayGoal .goalGif {
+	margin-left: 0px;
+    margin-right: auto;
+}
+
+.goal img {
+	width: 100%;
 }
 
 .goal .time {
