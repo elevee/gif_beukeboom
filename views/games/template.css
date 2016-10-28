@@ -93,6 +93,36 @@ h7 {
     margin-right: auto;
 }
 
+.goalGif.paused img {
+	opacity: 0.7;
+}
+
+/**** PLAY/LOADING ICONS ****/
+.goalGif i { /*for icons in all states*/
+	position: absolute;
+	right: 165px;
+	top: 75px;
+	color: #D9DDDE;
+	text-shadow: 0px 0px 35px blue;
+	display: none; /*by default*/
+}
+
+.paused i.fa-play {
+	display: block;
+	right: 165px;
+	top: 75px;
+}
+i.fa-play:hover {
+	color: white;
+}
+
+.loading i.fa-spin {
+	display: block;
+	right: 160px;
+	top: 82px;
+}
+/********/
+
 .goal img {
 	width: 100%;
 }

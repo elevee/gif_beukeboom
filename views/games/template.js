@@ -54,9 +54,9 @@ $(document).ready(function(){
 	// 	});
 	// }
 
-	getSched();
-	getMedia();
-	getGoal();
+	// getSched();
+	// getMedia();
+	// getGoal();
 
 
 	// Retrieves GIF image path we have put in the data-alt attribute. 
@@ -74,26 +74,36 @@ $(document).ready(function(){
 	// Preload all the GIFs.
 	var image = [];
 	
-	$.each(gifs, function(index) {
+	var $goals = $(".goals .goalGif");
+	$.each(gifs, function(index, el) {
 		image[index]     = new Image();
 		image[index].onload = function () {
-	        console.log("This gif has loaded!");        
-	    };
+			console.log("This gif has loaded!");
+			$goals.each(function(i, gl){
+				var found = $(gl).find("img[data-gif='"+el+"']");
+				if( found && found.length > 0 ){
+					$(gl).removeClass("loading").addClass("paused");
+				}
+			});
+		};
 		image[index].src = gifs[index];
 	});
 
-	$('.goals img').on('click', function() {
+	$('.goals .goalGif').on('click', function() {
 		var $this   = $(this),
 			$index  = $this.index(),
-			$img    = $this, //$this.children('img'), //since not using a container, like <figure>
+			$img    = $this.children('img'),
 			$imgSrc = $img.attr('src'),
 			$imgAlt = $img.attr('data-gif'),
 			$imgExt = $imgAlt.split('.');
+			console.log('value of this is '+$this);
 
 		if($imgExt.slice(-1)[0] === 'gif') {
 			$img.attr('src', $img.data('gif')).attr('data-gif', $imgSrc);
+			$this.removeClass('paused');
 		} else {
 			$img.attr('src', $imgAlt).attr('data-gif', $imgSrc);
+			$this.addClass('paused');
 		}
 	});
 

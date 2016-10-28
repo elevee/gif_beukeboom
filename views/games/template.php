@@ -20,11 +20,13 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 				$output .= "<div class='goal ". ($gl["isHomeTeam"] ? "home":"away")."Goal'>";
 					$output .= "<h4>".$gl["scorer"]."</h4>";
 					$output .= $gl["video_linkout"] ? "<h7>("."<a href='".$gl["video_linkout"]."' target='_blank'>"."mp4"."</a>)</h7>" : "";
-					$output .= "<div class='".($gl["gifUri"] ? "goalGif" : "goalPlaceholder")."' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
+					$output .= "<div class='".($gl["gifUri"] ? "goalGif" : "goalPlaceholder")." loading' style='position: relative;' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
 						// $output .= "<div class='large-12 columns' >";
 						if($gl["gifUri"]){
 							$output .= "<img src='".$gl["placeholder_img"]."' data-gif='".$gl["gifUri"]."' />";
-							$output .= "<span class='time'>".$gl["time"]."</span>";
+							$output .= "<i class='fa fa-play fa-5x' aria-hidden='true'></i>";
+							$output .= "<i class='fa fa-circle-o-notch fa-spin fa-4x fa-fw'></i>";
+							$output .= "<span class='sr-only'>Loading...</span>";
 						} else if ($gl["placeholder_img"]) { // No GIF yet!
 							$output .= "<img src='".$gl["placeholder_img"]."' />";
 							$output .= "<span class='processing'>Processing</span>";
@@ -33,6 +35,7 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 						}
 						// $output .= "</div>";
 					$output .= "</div>";
+					$output .= "<span class='time'>".$gl["time"]."</span>";
 				$output .= "</div>";
 			}
 		}
