@@ -54,8 +54,8 @@ $(document).ready(function(){
 	// 	});
 	// }
 
-	// getSched();
-	// getMedia();
+	getSched();
+	getMedia();
 	// getGoal();
 
 
@@ -78,7 +78,6 @@ $(document).ready(function(){
 	$.each(gifs, function(index, el) {
 		image[index]     = new Image();
 		image[index].onload = function () {
-			console.log("This gif has loaded!");
 			$goals.each(function(i, gl){
 				var found = $(gl).find("img[data-gif='"+el+"']");
 				if( found && found.length > 0 ){
@@ -96,8 +95,7 @@ $(document).ready(function(){
 			$imgSrc = $img.attr('src'),
 			$imgAlt = $img.attr('data-gif'),
 			$imgExt = $imgAlt.split('.');
-			console.log('value of this is '+$this);
-
+			
 		if($imgExt.slice(-1)[0] === 'gif') {
 			$img.attr('src', $img.data('gif')).attr('data-gif', $imgSrc);
 			$this.removeClass('paused');

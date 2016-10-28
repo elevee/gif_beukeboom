@@ -22,6 +22,14 @@ h7 {
 	position: relative;
 }
 
+.teamName{
+	margin-bottom: 0px;
+}
+
+.record {
+	font-size: 20px;
+}
+
 .home_team, .home_team .score, .homeGoal {
 	text-align: right;
 }
@@ -54,9 +62,17 @@ h7 {
 	text-align: center;
 }
 
-.accordion-content h4 {
-	font-size: 30px;
+.accordion-content {
+	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 	font-weight: 300;
+}
+
+.name {
+	font-size: 30px;
+}
+
+.seasonTotal {
+	font-size: 20px;
 }
 
 .homeGoal .goalPlaceholder .processing {
@@ -81,6 +97,7 @@ h7 {
 
 .goalGif {
 	width: 400px;
+	cursor: pointer;
 }
 
 .homeGoal .goalGif {
@@ -112,7 +129,7 @@ h7 {
 	right: 165px;
 	top: 75px;
 }
-i.fa-play:hover {
+.goalGif:hover i.fa-play {
 	color: white;
 }
 

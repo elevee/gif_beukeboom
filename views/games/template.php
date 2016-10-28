@@ -18,8 +18,8 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 				// print_r($gl);
 				// echo "</pre>";
 				$output .= "<div class='goal ". ($gl["isHomeTeam"] ? "home":"away")."Goal'>";
-					$output .= "<h4>".$gl["scorer"]."</h4>";
-					$output .= $gl["video_linkout"] ? "<h7>("."<a href='".$gl["video_linkout"]."' target='_blank'>"."mp4"."</a>)</h7>" : "";
+					$output .= "<span class='name'>".$gl["scorer"]."</span><span class='seasonTotal'>  (".$gl["seasonTotal"].")</span><br/>";
+					$output .= $gl["video_linkout"] ? "<h7>"."<a href='".$gl["video_linkout"]."' target='_blank'>"."<i class='fa fa-television fa-lg' aria-hidden='true'></i>"."</a></h7>" : "";
 					$output .= "<div class='".($gl["gifUri"] ? "goalGif" : "goalPlaceholder")." loading' style='position: relative;' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
 						// $output .= "<div class='large-12 columns' >";
 						if($gl["gifUri"]){
@@ -64,8 +64,11 @@ if(isset($game) && is_array($game)){
 					echo("<div class='team_logo'>");
 						echo("<img src='http://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/".$game["awayAbbrev"].".png&h=400' />");
 					echo("</div>");
-					echo("<div class='row'>");
+					echo("<div class='row teamName'>");
 						echo("<span>".$game["awayTeamName"]."</span>");
+					echo("</div>");
+					echo("<div class='row record'>");
+						echo("<span>".$game["awayRecord"]."</span>");
 					echo("</div>");
 					echo("<div class='row'>");
 						echo("<h1 class='score'>".$game["awayTeamScore"]."</h1>");
@@ -77,13 +80,21 @@ if(isset($game) && is_array($game)){
 							echo("<br />".$game["time_left"]."  ".$game["period"]);
 						}
 					echo("</span>");
+					echo("<div class='row'>");
+						if($game['isToday']){
+							echo("Ayyo row 2");
+						}
 					echo("</div>");
+				echo("</div>");
 				echo("<div class='large-5 small-5 columns home_team'>");
 					echo("<div class='team_logo'>");
 						echo("<img src='http://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/".$game["homeAbbrev"].".png&h=400' />");
 					echo("</div>");
-					echo("<div class='row'>");
+					echo("<div class='row teamName'>");
 						echo("<span>".$game["homeTeamName"]."</span>");
+					echo("</div>");
+					echo("<div class='row record'>");
+						echo("<span>".$game["homeRecord"]."</span>");
 					echo("</div>");
 					echo("<div class='row'>");
 						echo("<h1 class='score'>".$game["homeTeamScore"]."</h1>");

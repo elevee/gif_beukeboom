@@ -29,16 +29,27 @@ if (isset($gameId) && strlen($gameId) > 0){
 	if (isset($_game) && is_array($_game)){
 		$pdCtr = 0; //counts the periods
 		$pd = "";
+		$tz 	= new DateTimeZone('UTC');
+		$newTZ 	= new DateTimeZone("America/Los_Angeles");
+		$date 	= new DateTime( $_game["gameDate"], $UTC );
+		$today 	= date('Y-m-d');
+		$date->setTimezone( $newTZ );
+		$awayRecord = $_game["teams"]["away"]["leagueRecord"];
+		$homeRecord = $_game["teams"]["home"]["leagueRecord"];
 		$game 	= array(
 			"awayTeamName" 	=> $_game["teams"]["away"]["team"]["teamName"],
 			"awayAbbrev" 	=> le($_game["teams"]["away"]["team"]["abbreviation"]),
 			"awayTeamScore"	=> $_game["teams"]["away"]["score"],
+			"awayRecord" 	=> sprintf("%s-%s-%s", $awayRecord["wins"], $awayRecord["losses"], $awayRecord["ot"]),
 			"homeTeamName" 	=> $_game["teams"]["home"]["team"]["teamName"],
 			"homeAbbrev" 	=> le($_game["teams"]["home"]["team"]["abbreviation"]),
 			"homeTeamScore"	=> $_game["teams"]["home"]["score"],
+			"homeRecord" 	=> sprintf("%s-%s-%s", $homeRecord["wins"], $homeRecord["losses"], $homeRecord["ot"]),
 			"status"		=> $_game["status"]["detailedState"],
 			"period"		=> $_game["linescore"]["currentPeriodOrdinal"],
 			"time_left"		=> $_game["linescore"]["currentPeriodTimeRemaining"],
+			"date"			=> $date->format('Y-m-d'),
+			"isToday"		=> ($date->format('Y-m-d') == $today) ? true : false,
 			"goals"			=> array(),
 		);
 	}
@@ -54,6 +65,7 @@ if (isset($gameId) && strlen($gameId) > 0){
 			if($player["playerType"] === "Scorer") {
 				$scorer 	= $player["player"]["fullName"];
 				$playerId 	= $player["player"]["id"];
+				$seasonTotal= $player["seasonTotal"];
 			}
 			//Assists?
 		}
@@ -67,8 +79,10 @@ if (isset($gameId) && strlen($gameId) > 0){
 			foreach ($milestones as $i => $milestone) {
 				if($milestone["type"] == "GOAL" && $milestone["period"] == $period && $milestone["periodTime"] == $scoringPlay["about"]["periodTime"] && $milestone["playerId"] == $playerId ){
 					// $game["goals"][] = $milestone; //if we want the whole thing
-					$game["goals"][$goal_ctr]["scorer"] 		= $scorer;
-					$game["goals"][$goal_ctr]["playerId"] 		= $playerId;
+					$game["goals"][$goal_ctr]["scorer"]			= $scorer;
+					$game["goals"][$goal_ctr]["scorer_expanded"]= $milestone["description"];
+					$game["goals"][$goal_ctr]["playerId"]		= $playerId;
+					$game["goals"][$goal_ctr]["seasonTotal"]	= $seasonTotal;
 					$game["goals"][$goal_ctr]["period"] 		= $milestone["period"];
 					$game["goals"][$goal_ctr]["time"]			= $milestone["periodTime"];
 					$game["goals"][$goal_ctr]["description"] 	= $milestone["highlight"]["description"];
