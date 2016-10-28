@@ -76,6 +76,9 @@ $(document).ready(function(){
 	
 	$.each(gifs, function(index) {
 		image[index]     = new Image();
+		image[index].onload = function () {
+	        alert ("This gif has loaded!");        
+	    };
 		image[index].src = gifs[index];
 	});
 
