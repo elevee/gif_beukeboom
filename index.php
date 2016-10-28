@@ -128,7 +128,7 @@ echo("<html xmlns='http://www.w3.org/1999/xhtml' lang='en'>");
 		// echo("<link rel='shortcut icon' href='/favicon.ico' />");
 		echo("<link rel='stylesheet' type='text/css' href='/static/scripts/vendor/foundation-6.2.3/css/foundation.css' media='screen' />");
 		echo("<link rel='stylesheet' type='text/css' href='/static/stylesheets/common.css' media='screen' />");
-		// echo("<link rel='stylesheet' type='text/css' href='/static/stylesheets/fonts.css" media='screen'");
+		echo("<link rel='stylesheet' href='/static/scripts/vendor/font-awesome-4.7.0/css/font-awesome.min.css'>");
 		// echo("<link rel='stylesheet' type='text/css' href='/static/stylesheets/theme-medium.css' media='screen'");
 	
 
