@@ -83,6 +83,7 @@ if(isset($game) && is_array($game)){
 					echo("<div class='row'>");
 						if($game['isToday']){
 							echo("Ayyo row 2");
+							echo($game["awayStandings"]);
 						}
 					echo("</div>");
 				echo("</div>");

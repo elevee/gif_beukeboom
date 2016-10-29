@@ -11,6 +11,28 @@ $gameId = trim($state['id']); //scrub ID somehow to rid it of injection
 $_linkout_video 		= "FLASH_1200K_640X360";
 $_placeholder_image 	= "372x210";
 
+function findStandingsFor($res, $teamId, $type){ //type "conference", "division"
+	if(isset($res) && is_array($res)){
+		$str = "";
+		forEach($res["records"] as $r){
+			forEach($r["teamRecords"] as $t){
+				if($t["team"]["id"] == $teamId){
+					switch($type){
+						case "conference":
+							$str .= $t["conferenceRank"] . " in the " . $r["conference"]["shortName"];
+							break;
+						case "division":
+							$str .= $t["divisionRank"] . " in the " . $t["team"]["division"]["name"];
+							break;
+					}
+				}
+			}
+		}
+		return $str;
+	}
+	return false;
+}
+
 if (isset($gameId) && strlen($gameId) > 0){
   	// getGoalsForGame();
 	// $goals 	= array();
@@ -18,6 +40,7 @@ if (isset($gameId) && strlen($gameId) > 0){
 
 	$sched_uri 		= "https://statsapi.web.nhl.com/api/v1/schedule?gamePk=".$gameId."&expand=schedule.teams,schedule.linescore,schedule.broadcasts.all,schedule.ticket,schedule.game.content.media.epg,schedule.decisions,schedule.scoringplays,schedule.game.content.highlights.scoreboard,team.leaders&leaderCategories=points,goals,assists&site=en_nhl&teamId=";
 	$media_uri 		= "https://statsapi.web.nhl.com/api/v1/game/".$gameId."/content";
+	$stand_uri		= "https://statsapi.web.nhl.com/api/v1/standings/wildCardWithLeaders?expand=standings.record,standings.team,standings.division,standings.conference,team.schedule.next,team.schedule.previous&season=20162017";
 	$db_uri			= "/static/scripts/api_db.php";
 	// $schedResponse 	= null;
 	// $mediaResponse 	= null;
@@ -38,10 +61,12 @@ if (isset($gameId) && strlen($gameId) > 0){
 		$homeRecord = $_game["teams"]["home"]["leagueRecord"];
 		$game 	= array(
 			"awayTeamName" 	=> $_game["teams"]["away"]["team"]["teamName"],
+			"awayId" 		=> $_game["teams"]["away"]["team"]["id"],
 			"awayAbbrev" 	=> le($_game["teams"]["away"]["team"]["abbreviation"]),
 			"awayTeamScore"	=> $_game["teams"]["away"]["score"],
 			"awayRecord" 	=> sprintf("%s-%s-%s", $awayRecord["wins"], $awayRecord["losses"], $awayRecord["ot"]),
 			"homeTeamName" 	=> $_game["teams"]["home"]["team"]["teamName"],
+			"homeId" 		=> $_game["teams"]["home"]["team"]["id"],
 			"homeAbbrev" 	=> le($_game["teams"]["home"]["team"]["abbreviation"]),
 			"homeTeamScore"	=> $_game["teams"]["home"]["score"],
 			"homeRecord" 	=> sprintf("%s-%s-%s", $homeRecord["wins"], $homeRecord["losses"], $homeRecord["ot"]),
@@ -52,6 +77,10 @@ if (isset($gameId) && strlen($gameId) > 0){
 			"isToday"		=> ($date->format('Y-m-d') == $today) ? true : false,
 			"goals"			=> array(),
 		);
+		if($game["isToday"]){ //no need to get standings otherwise
+			$standRes = json_decode(CallAPI('GET', $stand_uri), true);
+			$game["awayStandings"] = findStandingsFor($standRes, $awayId, "conference");
+		}
 	}
 
 	$goal_ctr = 0;

@@ -5,6 +5,7 @@ $(document).ready(function(){
 		sched_uri 		= "https://statsapi.web.nhl.com/api/v1/schedule?gamePk=" + gameId + "&expand=schedule.teams,schedule.linescore,schedule.broadcasts.all,schedule.ticket,schedule.game.content.media.epg,schedule.decisions,schedule.scoringplays,schedule.game.content.highlights.scoreboard,team.leaders&leaderCategories=points,goals,assists&site=en_nhl&teamId=",
 		media_uri 		= "https://statsapi.web.nhl.com/api/v1/game/"+gameId+"/content",
 		goal_uri		= "https://nhl.bamcontent.com/nhl/id/v1/"+goalId+"/details/web-v1.json";
+		stand_uri		= "https://statsapi.web.nhl.com/api/v1/standings/wildCardWithLeaders?expand=standings.record,standings.team,standings.division,standings.conference,team.schedule.next,team.schedule.previous&season=20162017";
 		db_uri			= "/static/scripts/api_db.php",
 		schedResponse 	= null,
 		mediaResponse 	= null,
@@ -43,6 +44,17 @@ $(document).ready(function(){
 		});
 	};
 
+	var getStandings = function(){ //delete if unnec.
+		return $.ajax({
+			url: stand_uri,
+			dataType: 'json',
+			success: function(data){
+				console.log("Standings info: ", data);
+				goalResponse = data;
+			}
+		});
+	};
+
 	// var getGoals = function(gameId){  //DB call
 	// 	return $.ajax({
 	// 		url: db_uri + "?gameId="+gameId,
@@ -57,6 +69,7 @@ $(document).ready(function(){
 	getSched();
 	getMedia();
 	// getGoal();
+	getStandings();
 
 
 	// Retrieves GIF image path we have put in the data-alt attribute. 
@@ -95,7 +108,7 @@ $(document).ready(function(){
 			$imgSrc = $img.attr('src'),
 			$imgAlt = $img.attr('data-gif'),
 			$imgExt = $imgAlt.split('.');
-			
+
 		if($imgExt.slice(-1)[0] === 'gif') {
 			$img.attr('src', $img.data('gif')).attr('data-gif', $imgSrc);
 			$this.removeClass('paused');

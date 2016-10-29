@@ -77,16 +77,16 @@ h7 {
 
 .homeGoal .goalPlaceholder .processing {
 	position: absolute;
-	top: 140px; 
-	right: 130px; 
+	top: 100px;
+	right: 150px;
 	width: 100%; 
 	font-size: 20px;
 }
 
 .awayGoal .goalPlaceholder .processing {
 	position: absolute;
-	top: 140px; 
-	left: 130px; 
+	top: 100px;
+	left: 150px;
 	width: 100%; 
 	font-size: 20px;
 }
@@ -95,17 +95,20 @@ h7 {
 	position: relative;
 }
 
-.goalGif {
+.goalGif, .goalPlaceholder {
 	width: 400px;
+}
+
+.goalGif {
 	cursor: pointer;
 }
 
-.homeGoal .goalGif {
+.homeGoal .goalGif, .homeGoal .goalPlaceholder {
 	margin-left: auto;
     margin-right: 0px;
 }
 
-.awayGoal .goalGif {
+.awayGoal .goalGif, .awayGoal .goalPlaceholder {
 	margin-left: 0px;
     margin-right: auto;
 }
