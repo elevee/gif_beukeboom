@@ -68,7 +68,7 @@ $(document).ready(function(){
 
 	getSched();
 	getMedia();
-	// getGoal();
+	getGoal();
 	getStandings();
 
 

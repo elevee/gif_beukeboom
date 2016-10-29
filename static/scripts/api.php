@@ -167,6 +167,9 @@ function getScoreInfo($goalInfo, $gameId){
 					case "teamFileCode": //goal scoring team
 						$o["scoringTeam"] = $keyword["value"];
 						break;
+					case "gameId":
+						$o["gameId"] = $keyword["value"];
+						break;
 				}
 			}
 
@@ -189,6 +192,7 @@ function getScoreInfo($goalInfo, $gameId){
 			// 	'homeScore' => 1,
 			// 	'awayScore' => 4,
 			//  'scoringTeam' => 'TOR'
+			//  'gameId'    => '4848484'
 			// );
 		}
 	}

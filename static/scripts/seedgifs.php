@@ -54,7 +54,7 @@ foreach($toProcess as $gameId => $goals){
 						$_r = getGoalInfo($goal['id']);
 						$_s = getScoreInfo($_r, $gameId);
 						if ($date == $today){
-							echo("Notifying Slack! \n");
+							echo("Notifying Slack! GAME ID IS ". $gameId ." \n");
 							postToSlack($_r, $_s, $url, $response["uri"]);
 						}
 					}

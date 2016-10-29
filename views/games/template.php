@@ -81,10 +81,10 @@ if(isset($game) && is_array($game)){
 						}
 					echo("</span>");
 					echo("<div class='row'>");
-						if($game['isToday']){
-							echo("Ayyo row 2");
-							echo($game["awayStandings"]);
-						}
+						// if($game['isToday']){
+						// 	echo("Ayyo row 2");
+						// 	echo($game["awayStandings"]);
+						// }
 					echo("</div>");
 				echo("</div>");
 				echo("<div class='large-5 small-5 columns home_team'>");

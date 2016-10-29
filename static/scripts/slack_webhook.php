@@ -15,12 +15,7 @@ function postToSlack($goalApiResponse, $scoreInfo, $url, $gif){
 			"username" => "GIF Beukeboom",
 			"text" => $_r["description"] ."\n".$sc."\n<".$gif.">",
 			"icon_emoji" => $_s["scoringTeam"] ? ":nhl_".le($_s["scoringTeam"]).":" : ":ghost:",
-			"fallback" => $_r["description"],
-			// "attachments" => array(
-			// 	array(
-			// 		"text" => $sc
-			// 	)
-			// )
+			"fallback" => $_r["description"]
 		);
 
 		$res = CallAPI("POST", $url, json_encode($data));
@@ -38,7 +33,7 @@ function formatScore ($scoreInfo){
 		$msg .= " ";
 		$msg .= ":nhl_".le($_s['homeTeam']).": ";
 		$msg .= $_s['homeTeam'] == $_s['scoringTeam'] ? "*".$_s['homeScore']."*" : $_s['homeScore'];
-		$msg .= "   _".$_s["time_rem"]." ".$_s["period"]."_";
+		$msg .= "   <https://www.gifbeukeboom.com/games/".$_s["gameId"]."|_".$_s["time_rem"]."  ".$_s["period"]."_>";
 		return $msg;
 	}
 }
