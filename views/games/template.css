@@ -122,8 +122,8 @@ h7 {
 	position: absolute;
 	right: 165px;
 	top: 75px;
-	color: #D9DDDE;
-	text-shadow: 0px 0px 35px blue;
+	color: white; /*#D9DDDE;*/
+	text-shadow: 0px 0px 15px black;
 	display: none; /*by default*/
 }
 
@@ -133,7 +133,8 @@ h7 {
 	top: 75px;
 }
 .goalGif:hover i.fa-play {
-	color: white;
+	/*color: white;*/
+	text-shadow: 0px 0px 35px blue;
 }
 
 .loading i.fa-spin {
