@@ -66,10 +66,10 @@ $(document).ready(function(){
 	// 	});
 	// }
 
-	getSched();
-	getMedia();
-	getGoal();
-	getStandings();
+	// getSched();
+	// getMedia();
+	// getGoal();
+	// getStandings();
 
 
 	// Retrieves GIF image path we have put in the data-alt attribute. 

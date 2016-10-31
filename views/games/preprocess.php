@@ -1,8 +1,6 @@
 <?php
 include_once(dirname(__FILE__)."/../../static/scripts/api.php");
-// if(!function_exists('addGameToDB')){ //have had errors on multiple includes
 include_once(dirname(__FILE__)."/../../static/scripts/db_connect.php");	
-// }
 
 // echo("Preprocessing game");
 $gameId = trim($state['id']); //scrub ID somehow to rid it of injection
@@ -104,9 +102,8 @@ if (isset($gameId) && strlen($gameId) > 0){
 		// echo "</pre>";
 		
 		if(isset($milestones) && count($milestones) > 0){	
-			
 			foreach ($milestones as $i => $milestone) {
-				if($milestone["type"] == "GOAL" && $milestone["period"] == $period && $milestone["periodTime"] == $scoringPlay["about"]["periodTime"] && $milestone["playerId"] == $playerId ){
+				if($milestone["type"] == "GOAL" && $milestone["statsEventId"] == $scoringPlay["about"]["eventId"] && $milestone["playerId"] == $playerId ){ //$milestone["period"] == $period wasn't nec.
 					// $game["goals"][] = $milestone; //if we want the whole thing
 					$game["goals"][$goal_ctr]["scorer"]			= $scorer;
 					$game["goals"][$goal_ctr]["scorer_expanded"]= $milestone["description"];
