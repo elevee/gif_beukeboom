@@ -41,13 +41,15 @@ function getGamesForDay($day){
 	if (!is_null($day) && is_string($day)){
 		$uri = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=".$day."&endDate=".$day;
 		$res = json_decode( CallAPI('get', $uri), true);
-		$gms = $res["dates"][0]["games"];
-		$gameIds = array();
-		foreach($gms as $gm){
-			$gameIds[] = $gm["gamePk"];
+		if( isset($res) && is_array($res["dates"]) && isset($res["dates"][0]) && is_array($res["dates"][0]) ){
+			$gms = $res["dates"][0]["games"];
+			$gameIds = array();
+			foreach($gms as $gm){
+				$gameIds[] = $gm["gamePk"];
+			}
+			unset($uri,$res,$gms);
+			return $gameIds;
 		}
-		unset($uri,$res,$gms);
-		return $gameIds;
 	}
 	return null;
 }
