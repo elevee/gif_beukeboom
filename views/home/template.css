@@ -35,3 +35,8 @@ table .score {
 .score_detail {
 	font-size: 14px;
 }
+
+.noGames {
+	font-size: 16px;
+	text-align: center;
+}
