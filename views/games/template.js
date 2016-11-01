@@ -95,27 +95,25 @@ $(document).ready(function(){
 				var found = $(gl).find("img[data-gif='"+el+"']");
 				if( found && found.length > 0 ){
 					$(gl).removeClass("loading").addClass("paused");
+					$(gl).on('click', function() { //attaching listener only after gif has loaded fully
+						var $this   = $(this),
+							$index  = $this.index(),
+							$img    = $this.children('img'),
+							$imgSrc = $img.attr('src'),
+							$imgAlt = $img.attr('data-gif'),
+							$imgExt = $imgAlt.split('.');
+
+						if($imgExt.slice(-1)[0] === 'gif') {
+							$img.attr('src', $img.data('gif')).attr('data-gif', $imgSrc);
+							$this.removeClass('paused');
+						} else {
+							$img.attr('src', $imgAlt).attr('data-gif', $imgSrc);
+							$this.addClass('paused');
+						}
+					});
 				}
 			});
 		};
 		image[index].src = gifs[index];
 	});
-
-	$('.goals .goalGif').on('click', function() {
-		var $this   = $(this),
-			$index  = $this.index(),
-			$img    = $this.children('img'),
-			$imgSrc = $img.attr('src'),
-			$imgAlt = $img.attr('data-gif'),
-			$imgExt = $imgAlt.split('.');
-
-		if($imgExt.slice(-1)[0] === 'gif') {
-			$img.attr('src', $img.data('gif')).attr('data-gif', $imgSrc);
-			$this.removeClass('paused');
-		} else {
-			$img.attr('src', $imgAlt).attr('data-gif', $imgSrc);
-			$this.addClass('paused');
-		}
-	});
-
 });
