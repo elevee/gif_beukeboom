@@ -116,4 +116,11 @@ $(document).ready(function(){
 		};
 		image[index].src = gifs[index];
 	});
+
+	// so accordion will collapse and expand as expected
+	$('.accordion-title').click(function(accordion){
+		$this = $(this);
+		$content = $this.next('.accordion-content');
+		$content.is(':visible') ? $content.slideUp() : $content.slideDown();
+	});
 });
