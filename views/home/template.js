@@ -12,16 +12,17 @@ $(document).ready(function(){
 					games 	= data["dates"][0]["games"];
 
 				for(i=0,j=games.length;i<j;i++){
-					var awayTeam 		= games[i]["teams"]["away"]["team"]["teamName"],
-						homeTeam 		= games[i]["teams"]["home"]["team"]["teamName"],
-						awayScore 		= games[i]["teams"]["away"]["score"],
-						homeScore 		= games[i]["teams"]["home"]["score"],
-						detailedState	= games[i]["status"]["detailedState"], //doesn't include time remaining
-						current_period  = games[i]["linescore"]["currentPeriodOrdinal"],
-						timeLeft 		= games[i]["linescore"]["currentPeriodTimeRemaining"],
-						awayAbbrev 		= le(games[i]["teams"]["away"]["team"]["abbreviation"]),
-						homeAbbrev		= le(games[i]["teams"]["home"]["team"]["abbreviation"]),
-						gameId	 		= games[i]["gamePk"],
+					var awayTeam 			= games[i]["teams"]["away"]["team"]["teamName"],
+						homeTeam 			= games[i]["teams"]["home"]["team"]["teamName"],
+						awayScore 			= games[i]["teams"]["away"]["score"],
+						homeScore 			= games[i]["teams"]["home"]["score"],
+						detailedState		= games[i]["status"]["detailedState"], //doesn't include time remaining
+						current_period_val	= games[i]["linescore"]["currentPeriod"],
+						current_period  	= games[i]["linescore"]["currentPeriodOrdinal"],
+						timeLeft 			= games[i]["linescore"]["currentPeriodTimeRemaining"],
+						awayAbbrev 			= le(games[i]["teams"]["away"]["team"]["abbreviation"]),
+						homeAbbrev			= le(games[i]["teams"]["home"]["team"]["abbreviation"]),
+						gameId	 			= games[i]["gamePk"],
 						isLoser;
 						
 					var detail = detailedState; //we'll show "Final" and "Scheduled" if not in progress
@@ -34,6 +35,9 @@ $(document).ready(function(){
 
 					if(detailedState == "Final"){ 
 						isLoser = (parseInt(awayScore) < parseInt(homeScore) ? "away" : "home");
+						if (current_period_val && current_period_val > 3){ //game went to OT+
+							detail = detailedState +" ("+current_period+")";
+						}
 					}
 
 					if(detailedState == "Scheduled"){
