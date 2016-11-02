@@ -147,7 +147,7 @@ function calcRemainingTime($gl_time){ //input the goal time
 }
 
 function getScoreInfo($goalInfo, $gameId){
-	// we need to get the score at the time of the goal, and teams involved
+	// information needed at the time a goal is scored
 	if(isset($goalInfo)){
 		//goalInfo is response from Goal API
 		if(isset($goalInfo) && is_array($goalInfo) && isset($gameId)){
@@ -182,10 +182,19 @@ function getScoreInfo($goalInfo, $gameId){
 					$o["time_scored"]	= $scoringPlay["about"]["periodTime"];
 					$o["time_rem"] 		= calcRemainingTime($scoringPlay["about"]["periodTime"]);
 					$o["period"] 		= $scoringPlay["about"]["ordinalNum"];
+					
+					if(isset($scoringPlay["players"]) && is_array($scoringPlay["players"]) ){
+						foreach ($scoringPlay["players"] as $key => $player) {
+							if($player["playerType"] == "Scorer"){
+								$o["scorer"] 		= $player["player"]["fullName"];
+								$o["seasonTotal"]	= $player["seasonTotal"];
+								break;
+							}
+						}
+					}
 					break;
 				}
 			}
-
 			return $o;
 			// array(
 			// 	'eventId' => 70,
