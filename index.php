@@ -1,12 +1,60 @@
 <?php
+// if(!session_id()) {
+//     session_start();
+// }
 date_default_timezone_set('America/Los_Angeles');
 // include_once("path.php"); //for uniform path on includes
 require dirname(__FILE__).'/vendor/autoload.php';
+require_once(dirname(__FILE__)."/vendor/facebook/graph-sdk/src/Facebook/autoload.php");
 // require ABSPATH."/static/scripts/slack_webhook.php");
+include_once(dirname(__FILE__)."/fb_login.php");
+include_once(dirname(__FILE__)."/_env.php");
+
+include_once(dirname(__FILE__)."/static/scripts/error_mode.php");
 include_once("access.php");
 
+
+//after redirect from fb_login.php
+if (isset($_SESSION['fb_access_token'])) {
+	// echo '$_SESSION[fb_access_token] ==>' .$_SESSION['fb_access_token'];
+	// $response = fbTokenCheck($_SESSION['fb_access_token']);
+	$fb = new Facebook\Facebook(['app_id' => $FB_APP_ID,'app_secret' => $FB_SECRET,'default_graph_version' => $FB_GRAPH_VERSION]);
+    try {  // Returns a `Facebook\FacebookResponse` object
+      $response = $fb->get('/me?fields=id,name', $_SESSION['fb_access_token']);
+    } catch(Facebook\Exceptions\FacebookResponseException $e) {
+      echo 'Graph returned an error: ' . $e->getMessage();
+    } catch(Facebook\Exceptions\FacebookSDKException $e) {
+      echo 'Facebook SDK returned an error: ' . $e->getMessage();
+    }
+    $user = $response->getGraphUser();
+    if (fbUserInDB($user["id"])){
+
+    } else {
+    	// create new FB user in DB
+    }
+    print_r($user);
+    echo('<br>');
+    echo 'Name: ' . $user['name']. "<br>";
+    echo 'Id: ' . $user['id']. "<br>";
+    echo 'Name: ' . $user['name']. "<br>";
+
+}  else {
+    echo "Dont know about session";    
+}
+// $fb = new Facebook\Facebook([
+// 	'app_id' 				=> $FB_APP_ID,
+// 	'app_secret' 			=> $FB_SECRET,
+// 	'default_graph_version' => 'v2.8',
+// ]);
+// $helper = $fb->getRedirectLoginHelper();
+// $response = $fb->get('/me?fields=id,name', $accessToken);
+// $user = $response->getGraphUser();
+// print_r($user);
+
+
 // session start must be first thing in doc (before HTML tags)
-session_start();
+// session_start();
+
 // if(!userIsLoggedIn()){
 // 	include 'views/partials/_login.php';
 // 	exit();

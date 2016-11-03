@@ -1,14 +1,43 @@
 <?php
-include_once "_env.php";
-
+include_once(dirname(__FILE__)."/_env.php");
+// require_once(dirname(__FILE__)."/vendor/facebook/graph-sdk/src/Facebook/autoload.php");
 // echo("\n");
 // echo(sha512(''.$salt));
 // echo("\n");
 
+// session_start();
+// require_once __DIR__ . '/src/Facebook/autoload.php';
+// echo '<h3>Getting Access Token information</h3>';
+// if (isset($_SESSION['fb_access_token'])) {
+//         echo '$_SESSION[fb_access_token] ==>' .$_SESSION['fb_access_token'];
+        
+//     $fb = new Facebook\Facebook(['app_id' => '1115623171853481','app_secret' => '5d34f81d31b2ff2e60926e6c32f7e466','default_graph_version' => 'v2.4',]);
+//     try {  // Returns a `Facebook\FacebookResponse` object
+//       $response = $fb->get('/me?fields=id,name', $_SESSION['fb_access_token']);
+//     } catch(Facebook\Exceptions\FacebookResponseException $e) {
+//       echo 'Graph returned an error: ' . $e->getMessage();
+//       exit;
+//     } catch(Facebook\Exceptions\FacebookSDKException $e) {
+//       echo 'Facebook SDK returned an error: ' . $e->getMessage();
+//       exit;
+//     }
+//     $user = $response->getGraphUser();
+//     echo 'Name: ' . $user['name']. "<br>";    
+// }  else {
+//     echo "Dont know about session";    
+// }
+
 function userIsLoggedIn(){
 	global $salt;
 	global $state;
-	// echo("inside userIsLoggedIn");
+	
+	//handle FB users
+	if(isset($_SESSION["fb_access_token"])){
+		// if(){
+
+		// }
+	}
+	
 	if( isset($_POST['action']) && $_POST['action'] == "login" ){
 		if( !isset($_POST['email']) || $_POST['email'] == '' || !isset($_POST['password']) || $_POST['password'] == '' ){
 			$state["loginError"] = "Please fill in both fields";
@@ -37,6 +66,7 @@ function userIsLoggedIn(){
 		unset($_SESSION['loggedIn']);
 		unset($_SESSION['email']);
 		unset($_SESSION['password']);
+		unset($_SESSION['fb_access_token']);
 		session_destroy();
 		header('Location: '.$_POST['goto']);
 		// exit();
@@ -65,6 +95,43 @@ function userInDB($email, $pw){
 	}
 	$row = $s->fetch();
 	if ($row[0] > 0){ return true; }
+	return false;
+}
+
+// function fbTokenCheck($token){
+	// include_once(dirname(__FILE__)."/_env.php");
+	// echo("<br> FB APP ID: ".$FB_APP_ID);
+	// exit();
+	// $fb = new Facebook\Facebook(['app_id' => $FB_APP_ID,'app_secret' => $FB_SECRET,'default_graph_version' => $FB_GRAPH_VERSION]);
+ //    try {  // Returns a `Facebook\FacebookResponse` object
+ //      $response = $fb->get('/me?fields=id,name', $token);
+ //    } catch(Facebook\Exceptions\FacebookResponseException $e) {
+ //      echo 'Graph returned an error: ' . $e->getMessage();
+ //      return false;
+ //    } catch(Facebook\Exceptions\FacebookSDKException $e) {
+ //      echo 'Facebook SDK returned an error: ' . $e->getMessage();
+ //      return false;
+ //    }
+ //    return $response;
+// }
+
+function fbUserInDB($fbId){
+	// echo("checking to see if ". $email." with the password ". $pw ." is in the DB. <br>");
+	include_once(dirname(__FILE__)."/static/scripts/db_connect.php");
+	global $pdo;
+	try {
+	// 	$sql = 'SELECT COUNT(*) FROM users WHERE email = :email AND password = :pw';
+	// 	$s = $pdo->prepare($sql);
+	// 	$s->bindValue(":email", $email);
+	// 	$s->bindValue(":pw", $pw);
+	// 	$s->execute();
+	} catch (PDOException $e) {
+		$error = "Error finding FB user in DB.". $e;
+		include_once(dirname(__FILE__)."/views/partials/_error.php");
+	// 	exit();
+	}
+	// $row = $s->fetch();
+	// if ($row[0] > 0){ return true; }
 	return false;
 }
 
