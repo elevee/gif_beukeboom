@@ -56,7 +56,9 @@ function goalScoredInPeriod($period, $goals, &$applicablePeriods){
 
 if(isset($game) && is_array($game)){
 	// print_r($game);
+	// echo("<pre>");
 	// print_r($game["goals"]);
+	// echo("</pre>");
 	echo("<section class='game large-12 columns' data-gameId='".$state['id']."'>");
 		echo("<div class='row'>");
 			echo("<div class='large-12 columns matchup'>");
