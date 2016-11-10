@@ -103,7 +103,7 @@ if (isset($gameId) && strlen($gameId) > 0){
 		
 		if(isset($milestones) && count($milestones) > 0){	
 			foreach ($milestones as $i => $milestone) {
-				if($milestone["type"] == "GOAL" && $milestone["statsEventId"] == $scoringPlay["about"]["eventId"] && $milestone["playerId"] == $playerId ){ //$milestone["period"] == $period wasn't nec.
+				if($milestone["type"] == "GOAL" && $milestone["statsEventId"] == $scoringPlay["about"]["eventId"] ){ //$milestone["period"] == $period wasn't nec., $milestone["playerId"] == $playerId was giving false positives
 					// $game["goals"][] = $milestone; //if we want the whole thing
 					$game["goals"][$goal_ctr]["scorer"]			= $scorer;
 					$game["goals"][$goal_ctr]["scorer_expanded"]= $milestone["description"];
