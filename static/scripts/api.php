@@ -130,19 +130,23 @@ function getSchedInfo($gameId){
 	}
 }
 
-function calcRemainingTime($gl_time){ //input the goal time
-	if(isset($gl_time) && is_string($gl_time) && strlen($gl_time) > 0){
-		$prd_time = "20:00";
-		list($hours, $minutes) = explode(':', $gl_time);
-		$glTimestamp = mktime($hours, $minutes);
+function calcRemainingTime($scoringPlay){
+	if(isset($scoringPlay) && is_array($scoringPlay)){
+		$gl_time = $scoringPlay["about"]["periodTime"]; //goal time
+		$pd = $scoringPlay["about"]["period"]; //period number
+		if(isset($gl_time) && is_string($gl_time) && strlen($gl_time) > 0){
+			$prd_time = $pd >= 4 ? "05:00" : "20:00"; //OT is 5min
+			list($hours, $minutes) = explode(':', $gl_time);
+			$glTimestamp = mktime($hours, $minutes);
 
-		list($hours, $minutes) = explode(':', $prd_time);
-		$prdTimestamp = mktime($hours, $minutes);
+			list($hours, $minutes) = explode(':', $prd_time);
+			$prdTimestamp = mktime($hours, $minutes);
 
-		$seconds = $prdTimestamp - $glTimestamp;
-		$minutes = sprintf("%02d", ($seconds / 60) % 60);
-		$hours = floor($seconds / (60 * 60));
-		return "$hours:$minutes";//Using hours & mins, but it's workin!
+			$seconds = $prdTimestamp - $glTimestamp;
+			$minutes = sprintf("%02d", ($seconds / 60) % 60);
+			$hours = floor($seconds / (60 * 60));
+			return "$hours:$minutes";//Using hours & mins, but it's workin!
+		}
 	}
 }
 
@@ -180,7 +184,7 @@ function getScoreInfo($goalInfo, $gameId){
 					$o["awayScore"] 	= $scoringPlay["about"]["goals"]["away"];
 					$o["homeScore"] 	= $scoringPlay["about"]["goals"]["home"];
 					$o["time_scored"]	= $scoringPlay["about"]["periodTime"];
-					$o["time_rem"] 		= calcRemainingTime($scoringPlay["about"]["periodTime"]);
+					$o["time_rem"] 		= calcRemainingTime($scoringPlay);
 					$o["period"] 		= $scoringPlay["about"]["ordinalNum"];
 					
 					if(isset($scoringPlay["players"]) && is_array($scoringPlay["players"]) ){
