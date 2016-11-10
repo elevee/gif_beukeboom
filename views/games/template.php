@@ -39,7 +39,7 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 						}
 						// $output .= "</div>";
 					$output .= "</div>";
-					$output .= "<span class='time'>".$gl["time"]."</span>";
+					$output .= "<span class='time'>". ($period == "5" ? "" : $gl["time"]) ."</span>";
 				$output .= "</div>";
 			}
 		}
