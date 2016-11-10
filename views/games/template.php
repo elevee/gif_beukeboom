@@ -18,7 +18,11 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 				// print_r($gl);
 				// echo "</pre>";
 				$output .= "<div class='goal ". ($gl["isHomeTeam"] ? "home":"away")."Goal'>";
-					$output .= "<span class='name'>".$gl["scorer"]."</span><span class='seasonTotal'>  (".$gl["seasonTotal"].")</span><br/>";
+					$output .= "<span class='name'>".$gl["scorer"]."</span>";
+					if ($period !== "5"){ //shootout goals apparently don't count towards goal total
+						$output .= "<span class='seasonTotal'>  (".$gl["seasonTotal"].")</span>";
+					}
+					$output .= "<br/>";
 					$output .= $gl["video_linkout"] ? "<h7>"."<a href='".$gl["video_linkout"]."' target='_blank'>"."<i class='fa fa-television fa-lg' aria-hidden='true'></i>"."</a></h7>" : "";
 					$output .= "<div class='".($gl["gifUri"] ? "goalGif" : "goalPlaceholder")." loading' style='position: relative;' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
 						// $output .= "<div class='large-12 columns' >";

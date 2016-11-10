@@ -12,7 +12,7 @@ function postToSlack($goalApiResponse, $scoreInfo, $url, $gif){
 
 		$data = array(
 			"channel" => "#hockey",
-			"username" => $_s["scorer"]. " (".$_s["seasonTotal"].")",
+			"username" => $_s["scorer"]. seasonTotal($_s["seasonTotal"]),
 			"text" => $_r["description"] ."\n".$sc."\n<".$gif.">",
 			"icon_emoji" => $_s["scoringTeam"] ? ":nhl_".le($_s["scoringTeam"]).":" : ":ghost:",
 			"fallback" => $_r["description"]
@@ -23,6 +23,10 @@ function postToSlack($goalApiResponse, $scoreInfo, $url, $gif){
 		echo("\n");
 		print_r($res);
 	}
+}
+
+function seasonTotal($st){
+	return (isset($st) && $st !== "0") ? " (".$st.")" : "";
 }
 
 function formatScore ($scoreInfo){
