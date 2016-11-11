@@ -13,13 +13,14 @@ include_once(dirname(__FILE__)."/_env.php");
 include_once(dirname(__FILE__)."/static/scripts/error_mode.php");
 include_once("access.php");
 
+userIsLoggedIn();
 // print_r(userIsLoggedIn());
-// echo( sha512("gifgoldblum".$salt) );
+// unset($_SESSION['fb_access_token']);
 // exit();
 
 //after redirect from fb_login.php
 if (isset($_SESSION['fb_access_token'])) {
-	// echo '$_SESSION[fb_access_token] ==>' .$_SESSION['fb_access_token'];
+	echo '$_SESSION[fb_access_token] ==>' .$_SESSION['fb_access_token'];
 	// $response = fbTokenCheck($_SESSION['fb_access_token']);
 	$fb = new Facebook\Facebook(['app_id' => $FB_APP_ID,'app_secret' => $FB_SECRET,'default_graph_version' => $FB_GRAPH_VERSION]);
     try {  // Returns a `Facebook\FacebookResponse` object
@@ -30,7 +31,7 @@ if (isset($_SESSION['fb_access_token'])) {
       echo 'Facebook SDK returned an error: ' . $e->getMessage();
     }
     $user = $response->getGraphUser();
-    if (fbUserInDB(array("fbId" => $user["id"]))){
+    if (userInDB(array("fbId" => $user["id"]))){
 
     } else {
     	// create new FB user in DB
@@ -42,7 +43,7 @@ if (isset($_SESSION['fb_access_token'])) {
     echo 'Name: ' . $user['name']. "<br>";
 
 }  else {
-    echo "Dont know about session";    
+    echo "Dont know about session, FB-wise.";    
 }
 // $fb = new Facebook\Facebook([
 // 	'app_id' 				=> $FB_APP_ID,
@@ -202,7 +203,7 @@ echo("<html xmlns='http://www.w3.org/1999/xhtml' lang='en'>");
 
 	echo("</head>");
 	echo("<body>");
-		if(!userIsLoggedIn()){
+		if( !isset($_SESSION["loggedIn"]) ){
 			include 'views/partials/_header.php';
 			include 'views/partials/_login.php';
 			exit();

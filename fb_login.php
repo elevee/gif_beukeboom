@@ -38,7 +38,7 @@ if (! isset($accessToken)) {
         exit;
     } else {
         $permissions = ['email']; // Optional permissions
-        $loginUrl = $helper->getLoginUrl('http://localhost:8888/', $permissions);
+        $loginUrl = $helper->getLoginUrl($FB_LOGIN_URL, $permissions);
         echo '<a href="' . htmlspecialchars($loginUrl) . '">Log in with Facebook!</a>';
         // header('HTTP/1.0 400 Bad Request');
         // echo 'Bad request';

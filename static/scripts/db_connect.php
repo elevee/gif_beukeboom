@@ -38,6 +38,70 @@ try {
 }
 // echo("DB Connection Succeeded.\n");
 
+function userInDB($u){ //array takes either email + pw or just fbId
+	// echo("checking to see if ". $email." with the password ". $pw ." is in the DB. <br>");
+	global $pdo;
+	if(isset($u["fbId"]) && is_string($u["fbId"]) ){ //FB users
+		try {
+			$sql = 'SELECT id FROM users WHERE fbId = :fbId';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(":fbId", $u["fbId"]);
+			$s->execute();
+		} catch (PDOException $e) {
+			$error = "Error finding FB user in DB.". $e;
+			include_once(dirname(__FILE__)."/views/partials/_error.php");
+			exit();
+		}
+		$row = $s->fetch();
+		if ($row[0] > 0){ return true; }
+	}
+	if(isset($u["email"]) && is_string($u["email"]) && isset($u["pw"]) && is_string($u["pw"])){
+		try {
+			$sql = 'SELECT COUNT(*) FROM users WHERE email = :email AND password = :pw';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(":email", $u["email"]);
+			$s->bindValue(":pw", $u["pw"]);
+			$s->execute();
+		} catch (PDOException $e) {
+			$error = "Error finding user in DB.". $e;
+			include_once(dirname(__FILE__)."/views/partials/_error.php");
+			exit();
+		}
+		$row = $s->fetch();
+		if ($row[0] > 0){ return true; }
+	}
+	return false;
+}
+
+// function createUser($u){
+// 	if(isset($u) && is_array($u)){
+// 		if(isset($u["fbId"]) && is_string($u["fbId"])){ //New FB user
+// 			try {
+// 				$sql = "SELECT COUNT(id) FROM games WHERE id=:gameId;";
+// 				$stmt = $pdo->prepare($sql);
+// 				$stmt->execute(['fbId' => $u["fbId"]); 
+// 				$count = $stmt->fetch();
+// 				if ($count[0] == 0){ //fetch returns an array
+// 					try {
+// 						$sql = "INSERT INTO games (id) VALUES (:gameId);";
+// 						$stmt = $pdo->prepare($sql);
+// 						$stmt->execute(['gameId' => $gameId]);
+// 						echo("Game $gameId added to DB. \n");
+// 						return true;
+// 					} catch (PDOException $e) {
+// 						echo("Error adding Game $gameId to Game table of DB.\n".$e);
+// 					}
+// 				} else {
+// 					echo("Game already created for $gameId\n");
+// 				}
+// 			} catch (PDOException $e) {
+// 				echo("Error checking existence of game $gameId in Game table of DB.\n");
+// 				exit();
+// 			}
+// 		}
+// 	}
+// }
+
 
 function addGameToDB($gameId, &$pdo){
 	if (isset($gameId) && is_numeric($gameId)){

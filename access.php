@@ -1,5 +1,6 @@
 <?php
 include_once(dirname(__FILE__)."/_env.php");
+include_once(dirname(__FILE__)."/static/scripts/db_connect.php");
 // require_once(dirname(__FILE__)."/vendor/facebook/graph-sdk/src/Facebook/autoload.php");
 // echo("\n");
 // echo(sha512(''.$salt));
@@ -27,15 +28,15 @@ include_once(dirname(__FILE__)."/_env.php");
 //     echo "Dont know about session";    
 // }
 
-function userIsLoggedIn(){
+function userIsLoggedIn($u = null){
 	global $salt;
 	global $state;
 	
 	//handle FB users
-	if(isset($_SESSION["fb_access_token"])){
-		// if(){
+	if(isset($u["fbId"])){
+		if( userInDB( array("fbId" => $u["fbId"]) ) ){
 
-		// }
+		}
 	}
 	
 	if( isset($_POST['action']) && $_POST['action'] == "login" ){
@@ -78,28 +79,6 @@ function userIsLoggedIn(){
 	}
 }
 
-function userInDB($u){ //array takes either email + pw or just fbId
-	// echo("checking to see if ". $email." with the password ". $pw ." is in the DB. <br>");
-	include_once(dirname(__FILE__)."/static/scripts/db_connect.php");
-	global $pdo;
-	if(isset($u["email"]) && is_string($u["email"]) && isset($u["pw"]) && is_string($u["pw"])){
-		try {
-			$sql = 'SELECT COUNT(*) FROM users WHERE email = :email AND password = :pw';
-			$s = $pdo->prepare($sql);
-			$s->bindValue(":email", $u["email"]);
-			$s->bindValue(":pw", $u["pw"]);
-			$s->execute();
-		} catch (PDOException $e) {
-			$error = "Error finding user in DB.". $e;
-			include_once(dirname(__FILE__)."/views/partials/_error.php");
-			exit();
-		}
-		$row = $s->fetch();
-		if ($row[0] > 0){ return true; }
-	}
-	return false;
-}
-
 // function fbTokenCheck($token){
 	// include_once(dirname(__FILE__)."/_env.php");
 	// echo("<br> FB APP ID: ".$FB_APP_ID);
@@ -116,26 +95,6 @@ function userInDB($u){ //array takes either email + pw or just fbId
  //    }
  //    return $response;
 // }
-
-function fbUserInDB($fbId){
-	// echo("checking to see if ". $email." with the password ". $pw ." is in the DB. <br>");
-	include_once(dirname(__FILE__)."/static/scripts/db_connect.php");
-	global $pdo;
-	try {
-	// 	$sql = 'SELECT COUNT(*) FROM users WHERE email = :email AND password = :pw';
-	// 	$s = $pdo->prepare($sql);
-	// 	$s->bindValue(":email", $email);
-	// 	$s->bindValue(":pw", $pw);
-	// 	$s->execute();
-	} catch (PDOException $e) {
-		$error = "Error finding FB user in DB.". $e;
-		include_once(dirname(__FILE__)."/views/partials/_error.php");
-	// 	exit();
-	}
-	// $row = $s->fetch();
-	// if ($row[0] > 0){ return true; }
-	return false;
-}
 
 function sha512($string) {
     return hash('sha512', $string);
