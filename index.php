@@ -13,6 +13,9 @@ include_once(dirname(__FILE__)."/_env.php");
 include_once(dirname(__FILE__)."/static/scripts/error_mode.php");
 include_once("access.php");
 
+// print_r(userIsLoggedIn());
+// echo( sha512("gifgoldblum".$salt) );
+// exit();
 
 //after redirect from fb_login.php
 if (isset($_SESSION['fb_access_token'])) {
@@ -27,7 +30,7 @@ if (isset($_SESSION['fb_access_token'])) {
       echo 'Facebook SDK returned an error: ' . $e->getMessage();
     }
     $user = $response->getGraphUser();
-    if (fbUserInDB($user["id"])){
+    if (fbUserInDB(array("fbId" => $user["id"]))){
 
     } else {
     	// create new FB user in DB

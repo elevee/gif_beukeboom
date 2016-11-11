@@ -45,7 +45,7 @@ function userIsLoggedIn(){
 		}
 		$password = sha512($_POST['password'] . $salt);
 		
-		if(userInDB($_POST["email"], $password)){
+		if( userInDB( array("email" => $_POST["email"], "pw" => $password) )){
 			session_start();
 			$_SESSION['loggedIn'] = true;
 			$_SESSION['email'] = $_POST['email'];
@@ -74,27 +74,29 @@ function userIsLoggedIn(){
 
 	// session_start();
 	if ( isset($_SESSION['loggedIn']) ){
-		return userInDB( $_SESSION["email"], $_SESSION["password"] );
+		return userInDB( array( "email" => $_SESSION["email"], "pw" => $_SESSION["password"]) );
 	}
 }
 
-function userInDB($email, $pw){
+function userInDB($u){ //array takes either email + pw or just fbId
 	// echo("checking to see if ". $email." with the password ". $pw ." is in the DB. <br>");
 	include_once(dirname(__FILE__)."/static/scripts/db_connect.php");
 	global $pdo;
-	try {
-		$sql = 'SELECT COUNT(*) FROM users WHERE email = :email AND password = :pw';
-		$s = $pdo->prepare($sql);
-		$s->bindValue(":email", $email);
-		$s->bindValue(":pw", $pw);
-		$s->execute();
-	} catch (PDOException $e) {
-		$error = "Error finding user in DB.". $e;
-		include_once(dirname(__FILE__)."/views/partials/_error.php");
-		exit();
+	if(isset($u["email"]) && is_string($u["email"]) && isset($u["pw"]) && is_string($u["pw"])){
+		try {
+			$sql = 'SELECT COUNT(*) FROM users WHERE email = :email AND password = :pw';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(":email", $u["email"]);
+			$s->bindValue(":pw", $u["pw"]);
+			$s->execute();
+		} catch (PDOException $e) {
+			$error = "Error finding user in DB.". $e;
+			include_once(dirname(__FILE__)."/views/partials/_error.php");
+			exit();
+		}
+		$row = $s->fetch();
+		if ($row[0] > 0){ return true; }
 	}
-	$row = $s->fetch();
-	if ($row[0] > 0){ return true; }
 	return false;
 }
 
