@@ -217,6 +217,7 @@ echo("<html xmlns='http://www.w3.org/1999/xhtml' lang='en'>");
 		if( !isset($_SESSION["loggedIn"]) ){
 			include 'views/partials/_header.php';
 			include 'views/partials/_login.php';
+			include 'views/partials/_footer.php';
 			exit();
 		}
 		include_once("views/partials/_header.php");

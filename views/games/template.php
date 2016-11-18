@@ -82,7 +82,7 @@ if(isset($game) && is_array($game)){
 				echo("</div>");
 				echo("<div class='large-2 small-2 columns status'>");
 					echo("<span>".$game["status"]);
-						if ($game["status"] == "In Progress"){
+						if ($game["status"] == "In Progress" && isset($game["time_left"])){
 							echo("<br />".$game["time_left"]."  ".$game["period"]);
 						}
 					echo("</span>");

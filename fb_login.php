@@ -1,10 +1,11 @@
 <?php
-if(!session_id()) {
-    session_start();
-}
 require_once(dirname(__FILE__)."/vendor/facebook/graph-sdk/src/Facebook/autoload.php");
 include_once(dirname(__FILE__)."/_env.php");
 include_once(dirname(__FILE__)."/static/scripts/error_mode.php");
+
+if(!session_id()) {
+    session_start();
+}
 
 //shake my hand!
 $fb = new Facebook\Facebook([
