@@ -77,7 +77,7 @@ if (isset($gameId) && strlen($gameId) > 0){
 		);
 		if($game["isToday"]){ //no need to get standings otherwise
 			$standRes = json_decode(CallAPI('GET', $stand_uri), true);
-			$game["awayStandings"] = findStandingsFor($standRes, $awayId, "conference");
+			$game["awayStandings"] = findStandingsFor($standRes, $game["awayId"], "conference");
 		}
 	}
 
