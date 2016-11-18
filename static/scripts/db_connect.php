@@ -43,13 +43,13 @@ function userInDB($u){ //array takes either email + pw or just fbId
 	global $pdo;
 	if(isset($u["fbId"]) && is_string($u["fbId"]) ){ //FB users
 		try {
-			$sql = 'SELECT id FROM users WHERE fbId = :fbId';
+			$sql = "SELECT id FROM users WHERE fbId = :fbId";
 			$s = $pdo->prepare($sql);
 			$s->bindValue(":fbId", $u["fbId"]);
 			$s->execute();
 		} catch (PDOException $e) {
 			$error = "Error finding FB user in DB.". $e;
-			include_once(dirname(__FILE__)."/views/partials/_error.php");
+			include_once(dirname(__FILE__)."/../../views/partials/_error.php");
 			exit();
 		}
 		$row = $s->fetch();
@@ -73,34 +73,37 @@ function userInDB($u){ //array takes either email + pw or just fbId
 	return false;
 }
 
-// function createUser($u){
-// 	if(isset($u) && is_array($u)){
-// 		if(isset($u["fbId"]) && is_string($u["fbId"])){ //New FB user
-// 			try {
-// 				$sql = "SELECT COUNT(id) FROM games WHERE id=:gameId;";
-// 				$stmt = $pdo->prepare($sql);
-// 				$stmt->execute(['fbId' => $u["fbId"]); 
-// 				$count = $stmt->fetch();
-// 				if ($count[0] == 0){ //fetch returns an array
-// 					try {
-// 						$sql = "INSERT INTO games (id) VALUES (:gameId);";
-// 						$stmt = $pdo->prepare($sql);
-// 						$stmt->execute(['gameId' => $gameId]);
-// 						echo("Game $gameId added to DB. \n");
-// 						return true;
-// 					} catch (PDOException $e) {
-// 						echo("Error adding Game $gameId to Game table of DB.\n".$e);
-// 					}
-// 				} else {
-// 					echo("Game already created for $gameId\n");
-// 				}
-// 			} catch (PDOException $e) {
-// 				echo("Error checking existence of game $gameId in Game table of DB.\n");
-// 				exit();
-// 			}
-// 		}
-// 	}
-// }
+function createUser($u){
+	global $pdo;
+	if(isset($u)){ //is_array test wouldn't pass. Array-like?
+		echo('<br>____creating a FB user with ID____'.$u["id"]."<br>");
+		if(isset($u["id"]) && is_string($u["id"])){ //New FB user
+			try {
+				$sql = "SELECT COUNT(id) FROM users WHERE fbId=:fbId;";
+				$stmt = $pdo->prepare($sql);
+				$stmt->execute(array('fbId' => $u["id"])); 
+				$count = $stmt->fetch();
+				if ($count[0] == 0){ //fetch returns an array
+					try {
+						$sql = "INSERT INTO users (fbId, roleId) VALUES (:fbId, :roleId);";
+						$stmt = $pdo->prepare($sql);
+						$stmt->bindValue(':fbId', $u['id']);
+						$stmt->bindValue(':roleId', 2);
+						echo("<br/> Adding FB user to DB. <br/>");
+						return $stmt->execute(); //returns true on success
+					} catch (PDOException $e) {
+						echo("Error adding FB user to Users table of DB.\n".$e);
+					}
+				} else {
+					echo("<br /> FB user exists already. <br />");
+				}
+			} catch (PDOException $e) {
+				echo("Error creating FB user in DB.\n");
+				exit();
+			}
+		}
+	}
+}
 
 
 function addGameToDB($gameId, &$pdo){

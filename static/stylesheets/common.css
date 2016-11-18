@@ -7,15 +7,36 @@
   background: #fff;
   border: 1px solid #ddd; 
   margin: 100px 0;
-  padding: 40px 20px 0 20px;
+  padding: 40px 20px 40px 20px;
 }
 
 .login-box .columns {
 	padding: 0px;
 }
 
+.loggedIn {
+  text-align: right;
+}
+
+.loggedIn form {
+  width: auto;
+}
+
+.loggedIn ul {
+  list-style-type: none;
+  margin: 0px;
+}
+
+.loggedIn ul li {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.userName {
+  font-weight: bold;
+}
+
 .logout {
-     float: right;
      background:none!important;
      border:none; 
      padding:0!important;

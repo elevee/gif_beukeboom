@@ -50,7 +50,7 @@ if (isset($gameId) && strlen($gameId) > 0){
 	if (isset($_game) && is_array($_game)){
 		$pdCtr = 0; //counts the periods
 		$pd = "";
-		$tz 	= new DateTimeZone('UTC');
+		$UTC 	= new DateTimeZone('UTC');
 		$newTZ 	= new DateTimeZone("America/Los_Angeles");
 		$date 	= new DateTime( $_game["gameDate"], $UTC );
 		$today 	= date('Y-m-d');

@@ -28,14 +28,24 @@ include_once(dirname(__FILE__)."/static/scripts/db_connect.php");
 //     echo "Dont know about session";    
 // }
 
-function userIsLoggedIn($u = null){
+function userIsLoggedIn($u = null){ //for FB users: pass in $user array
 	global $salt;
 	global $state;
 	
-	//handle FB users
-	if(isset($u["fbId"])){
-		if( userInDB( array("fbId" => $u["fbId"]) ) ){
+	// echo("checking ". $u["id"]." <br>");
+	// userInDB(array("fbId" => $u["id"]));
+	// exit();
 
+	//handle FB users
+	if( isset($u["id"]) ){
+		// echo( !userInDB(array("fbId" => $u["id"])) ? "returned true" : "returned false");
+		if (!userInDB(array("fbId" => $u["id"]))){
+			createUser($u);
+		}
+
+		if( userInDB( array("fbId" => $u["id"]) ) ){
+			$_SESSION['loggedIn'] = true;
+			// $_SESSION['email'] = $u["email"];
 		}
 	}
 	
@@ -63,7 +73,9 @@ function userIsLoggedIn($u = null){
 	}
 
 	if ( isset($_POST['action']) && $_POST['action'] == "logout" ){
-		session_start();
+		if(!isset($_SESSION)){ 
+	        session_start(); 
+	    } 
 		unset($_SESSION['loggedIn']);
 		unset($_SESSION['email']);
 		unset($_SESSION['password']);
@@ -73,10 +85,10 @@ function userIsLoggedIn($u = null){
 		// exit();
 	}
 
-	// session_start();
-	if ( isset($_SESSION['loggedIn']) ){
-		return userInDB( array( "email" => $_SESSION["email"], "pw" => $_SESSION["password"]) );
-	}
+	// This is used if we're doing native usernames/pwds
+	// if ( isset($_SESSION['loggedIn']) ){
+	// 	return userInDB( array( "email" => $_SESSION["email"], "pw" => $_SESSION["password"]) );
+	// }
 }
 
 // function fbTokenCheck($token){

@@ -15,7 +15,7 @@ $fb = new Facebook\Facebook([
 $helper = $fb->getRedirectLoginHelper();
 
 // http://stackoverflow.com/questions/32029116/facebook-sdk-returned-an-error-cross-site-request-forgery-validation-failed-th
-//$_SESSION['FBRLH_state']=$_GET['state'];
+// $_SESSION['FBRLH_state']=$_GET['state'];
 
 try {
     $accessToken = $helper->getAccessToken();
@@ -37,9 +37,10 @@ if (! isset($accessToken)) {
         echo "Error Description: " . $helper->getErrorDescription() . "\n";
         exit;
     } else {
-        $permissions = ['email']; // Optional permissions
-        $loginUrl = $helper->getLoginUrl($FB_LOGIN_URL, $permissions);
-        echo '<a href="' . htmlspecialchars($loginUrl) . '">Log in with Facebook!</a>';
+        // DOING ALL THIS ON HEADER PARTIAL
+        // $permissions = ['email']; // Optional permissions
+        // $loginUrl = $helper->getLoginUrl($FB_LOGIN_URL, $permissions);
+        // echo '<a href="' . htmlspecialchars($loginUrl) . '">Log in with Facebook!</a>';
         // header('HTTP/1.0 400 Bad Request');
         // echo 'Bad request';
     }
@@ -57,7 +58,7 @@ if (! isset($accessToken)) {
     // }
     
     try {
-        $response = $fb->get('/me?fields=id,name', $accessToken);
+        $response = $fb->get('/me?fields=id,name,email,picture,first_name', $accessToken);
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
         echo 'Graph returned an error: ' . $e->getMessage();
         exit;
@@ -67,19 +68,19 @@ if (! isset($accessToken)) {
     }
     $user = $response->getGraphUser();
     
-    echo 'Name: ' . $user['name'] . "<br>";
-    echo 'ID: ' . $user['id'];
+    // echo 'Name: ' . $user['name'] . "<br>";
+    // echo 'ID: ' . $user['id'];
     // OR
     // echo 'Name: ' . $user->getName();
     // Logged in
-    echo '<h3>Access Token</h3>';
-    var_dump($accessToken->getValue());
+    // echo '<h3>Access Token</h3>';
+    // var_dump($accessToken->getValue());
     // The OAuth 2.0 client handler helps us manage access tokens
     $oAuth2Client = $fb->getOAuth2Client();
     // Get the access token metadata from /debug_token
     $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-    echo '<h3>Metadata</h3>';
-    var_dump($tokenMetadata);
+    // echo '<h3>Metadata</h3>';
+    // var_dump($tokenMetadata);
     $tokenMetadata->validateAppId($FB_APP_ID);
     $tokenMetadata->validateExpiration();
     if (! $accessToken->isLongLived()) {
@@ -90,14 +91,12 @@ if (! isset($accessToken)) {
         echo "<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>\n\n";
         exit;
       }
-      echo '<h3>Long-lived</h3>';
-      var_dump($accessToken->getValue());
+      // echo '<h3>Long-lived</h3>';
+      // var_dump($accessToken->getValue());
     }
-    echo '<h3>Storing Session Information</h3>';
-    echo "-->". $accessToken;
+    // echo '<h3>Storing Session Information</h3>';
+    // echo "-->". $accessToken;
     $_SESSION['fb_access_token'] = (string) $accessToken;
-
-
-    echo "-->". $user['name'];
-    header("Location: http://localhost:8888"); /* Redirect browser */
+    // echo "-->". $user['name'];
+    header("Location: ".$FB_LOGIN_URL); /* Redirect browser */
 }

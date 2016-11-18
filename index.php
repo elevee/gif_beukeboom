@@ -13,37 +13,48 @@ include_once(dirname(__FILE__)."/_env.php");
 include_once(dirname(__FILE__)."/static/scripts/error_mode.php");
 include_once("access.php");
 
-userIsLoggedIn();
+// session_start();
+// unset($_SESSION['loggedIn']);
+// unset($_SESSION['email']);
+// unset($_SESSION['password']);
+// unset($_SESSION['fb_access_token']);
+// session_destroy();
+// exit();	
+
 // print_r(userIsLoggedIn());
 // unset($_SESSION['fb_access_token']);
 // exit();
 
 //after redirect from fb_login.php
 if (isset($_SESSION['fb_access_token'])) {
-	echo '$_SESSION[fb_access_token] ==>' .$_SESSION['fb_access_token'];
+	// echo '$_SESSION[fb_access_token] ==>' .$_SESSION['fb_access_token'];
 	// $response = fbTokenCheck($_SESSION['fb_access_token']);
 	$fb = new Facebook\Facebook(['app_id' => $FB_APP_ID,'app_secret' => $FB_SECRET,'default_graph_version' => $FB_GRAPH_VERSION]);
     try {  // Returns a `Facebook\FacebookResponse` object
-      $response = $fb->get('/me?fields=id,name', $_SESSION['fb_access_token']);
+      $response = $fb->get('/me?fields=id,name,email,picture,first_name', $_SESSION['fb_access_token']);
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
       echo 'Graph returned an error: ' . $e->getMessage();
     } catch(Facebook\Exceptions\FacebookSDKException $e) {
       echo 'Facebook SDK returned an error: ' . $e->getMessage();
     }
-    $user = $response->getGraphUser();
-    if (userInDB(array("fbId" => $user["id"]))){
+    $currentUser = $response->getGraphUser();
+    // if (!userInDB(array("fbId" => $user["id"]))){ // create new FB user in DB
+    // 	createUser($user);
+    // }
+    userIsLoggedIn($currentUser);
+    // print_r($currentUser);
+    // echo('<br>');
+    // echo 'Id: ' . $currentUser['id']. "<br>";
+    // echo 'Name: ' . $currentUser['name']. "<br>";
 
-    } else {
-    	// create new FB user in DB
-    }
-    print_r($user);
-    echo('<br>');
-    echo 'Name: ' . $user['name']. "<br>";
-    echo 'Id: ' . $user['id']. "<br>";
-    echo 'Name: ' . $user['name']. "<br>";
+    // echo '<br>';
+    // echo 'Session, yall:';
+    // echo '<pre>';
+    // print_r($_SESSION);
+    // echo '</pre>';
 
-}  else {
-    echo "Dont know about session, FB-wise.";    
+}  else { //if they're logged out
+    userIsLoggedIn();
 }
 // $fb = new Facebook\Facebook([
 // 	'app_id' 				=> $FB_APP_ID,
