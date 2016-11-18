@@ -194,6 +194,9 @@ echo("<html xmlns='http://www.w3.org/1999/xhtml' lang='en'>");
 		echo("<link rel='stylesheet' href='/static/scripts/vendor/font-awesome-4.7.0/css/font-awesome.min.css'>");
 		// echo("<link rel='stylesheet' type='text/css' href='/static/stylesheets/theme-medium.css' media='screen'");
 	
+		//favicon
+		echo('<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">');
+		echo('<link rel="icon" href="/favicon.ico" type="image/x-icon">');
 
 		echo("<script type='text/javascript' src='/static/scripts/vendor/foundation-6.2.3/js/vendor/jquery.js'></script>");
 		echo("<script src='/static/scripts/vendor/momentjs-2.15.1/moment.js'></script>");

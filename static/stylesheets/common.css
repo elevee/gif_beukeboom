@@ -3,6 +3,11 @@
 	font-size: 36px;
 }
 
+.logo {
+  width: 200px;
+  margin: 0 auto;
+}
+
 .login-box {
   background: #fff;
   border: 1px solid #ddd; 

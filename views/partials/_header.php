@@ -22,6 +22,9 @@ echo("<section class='header row'>");
 	}
 
 	echo("<div class='large-12 columns'>");
-		echo("<h1>GIF Beukeboom</h1>");
+		// echo("<h1>GIF Beukeboom</h1>");
+		echo("<div class='logo center'>");
+			echo("<a href='https://www.gifbeukeboom.com/'><img src='/static/images/logo.png' /></a>");
+		echo("</div>");
 	echo("</div>");
 echo("</section>");
