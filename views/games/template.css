@@ -158,3 +158,13 @@ h7 {
 .goalPlaceholder img {
 	opacity: 0.7;
 }
+
+/*TRIM GOAL MODAL*/
+#trimModal {
+	width: 800px;
+}
+
+.trimVideo {
+	width: 150px;
+	border-radius: 5px;
+}

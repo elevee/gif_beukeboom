@@ -123,4 +123,39 @@ $(document).ready(function(){
 		$content = $this.next('.accordion-content');
 		$content.is(':visible') ? $content.slideUp() : $content.slideDown();
 	});
+
+	//When trim button is pressed on a goal
+	$('.trim').click(function(e){
+		e.preventDefault();
+		var $gl = $(this).closest('.goal'),
+			id = $gl.find('.goalGif, .goalPlaceholder').attr('data-playbackId'),
+			url = $gl.find('.video_linkout a').attr('href'),
+			$trimDiv = $('#trimModal');
+
+		$trimDiv.attr('data-goalId', id);
+		$trimDiv.find('video').attr('src', url);
+
+
+
+	});
+
+	//When trim button is pressed on trimGoal modal
+	$('.trimVideo').on('click', function(e){
+		e.preventDefault();
+		var currentTime = $('#trimModal').find('video')[0].currentTime;
+		console.log(currentTime);
+		if(currentTime && confirm("Happy with playhead position of "+currentTime+"?")){
+			$.post({
+				url: "/static/scripts/customGif.php",
+				data: {
+					currentTime: currentTime
+				},
+				success: function(d){
+					console.log("SUCCESS! "+d);
+					$('#trimModal video').attr('src', '');
+					$('.confirmTrimModal').click();
+				}
+			});
+		}
+	});
 });

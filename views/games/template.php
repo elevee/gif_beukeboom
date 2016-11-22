@@ -23,7 +23,9 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 						$output .= "<span class='seasonTotal'>  (".$gl["seasonTotal"].")</span>";
 					}
 					$output .= "<br/>";
-					$output .= $gl["video_linkout"] ? "<h7>"."<a href='".$gl["video_linkout"]."' target='_blank'>"."<i class='fa fa-television fa-lg' aria-hidden='true'></i>"."</a></h7>" : "";
+					$output .= isset($gl["video_linkout"]) ? "<h7 class='video_linkout'>"."<a href='".$gl["video_linkout"]."' target='_blank'>"."<i class='fa fa-television fa-lg' aria-hidden='true'></i>"."</a></h7>" : "";
+					$output .= isset($gl["shortGifUri"]) ? "" : "<h7>"."<a href='#' data-open='trimModal' class='trim'>"."<i class='fa fa-scissors fa-lg' aria-hidden='true'></i>"."</a></h7>";
+					include_once dirname(__FILE__).'/../partials/_trim.php';
 					$output .= "<div class='".($gl["gifUri"] ? "goalGif" : "goalPlaceholder")." loading' style='position: relative;' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
 						// $output .= "<div class='large-12 columns' >";
 						if($gl["gifUri"]){
@@ -148,5 +150,6 @@ if(isset($game) && is_array($game)){
 		  echo("</ul>");
 		echo("</div>");
 	 echo("</div>");
+	 echo("<a href='#' data-open='confirmTrimModal' class='confirmTrimModal'></a>"); //to be triggered remotely
 	echo("</section>");
 }
