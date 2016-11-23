@@ -10,6 +10,7 @@ include_once(dirname(__FILE__)."/api.php");
 include_once(dirname(__FILE__)."/db_connect.php");
 include_once(dirname(__FILE__)."/s3_functions.php");
 include_once(dirname(__FILE__)."/slack_webhook.php");
+include_once(dirname(__FILE__)."/utilities.php");
 
 $toProcess = array();
 $today = date("Y-m-d");
@@ -43,7 +44,7 @@ if(isset($games) && is_array($games) && count($games) > 0){
 					if (isset($response) && is_array($response) && !is_null($response['uri'])) {
 						//Delete temp GIF on server
 						echo("Temp Gif Deleted? \n");
-						echo(deleteTempFiles($response['id']) ? "Yes" : "Nope");
+						echo(deleteTempFiles($response['id'], false) ? "Yes" : "Nope");
 						echo("\n");
 						// Put resulting cloud URI into DB
 						$added = addGifToDB($response, $pdo);
@@ -98,27 +99,11 @@ function createGif($gameId, $goal){
 		}
 		$output = $goal;
 		$output["gameId"] = $gameId;
+		$output["videoUri"] = $goal["videoUri"];
 		unset($tmp_path, $cmd);
-		return $output; // exports goal object but with gameId added in for next step
+		return $output; // exports goal object but with gameId and videoUri added in for next step
 	}
 	return null;
-}
-
-function deleteTempFiles($goalId){
-	if(isset($goalId) && strlen($goalId > 0)){
-		$files = array( 
-			"../../tempGifs/".$goalId.".gif",
-			"../../tempGifs/".$goalId.".png",
-		);	
-		foreach ($files as $file) {
-			if (file_exists($file)){
-				unlink($file);
-			}
-		}
-		unset($files);
-		return true;
-	}
-	return false;
 }
 
 // array(

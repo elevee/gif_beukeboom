@@ -72,7 +72,8 @@ function uploadGif($goal, &$s3) {
 			return array(
 				'id' 		=> $goal["id"],
 				'gameId' 	=> $goal["gameId"],
-				'uri' 		=> $res["ObjectURL"]
+				'uri' 		=> $res["ObjectURL"],
+				'videoUri'  => $goal["videoUri"]
 			);
 		} catch (\Aws\S3\Exception\S3Exception $e) {
 		    // The AWS error code (e.g., )

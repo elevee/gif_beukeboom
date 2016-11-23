@@ -138,12 +138,13 @@ function addGifToDB($goal, &$pdo){
 	if (isset($goal) && is_array($goal)){
 		if(!gifExists($goal['id'], $pdo)){
 			try {
-				$sql = "INSERT INTO highlights (id, type, gameId, gif_uri) VALUES (:id, :type, :gameId, :uri);";
+				$sql = "INSERT INTO highlights (id, type, gameId, gif_uri, video_uri) VALUES (:id, :type, :gameId, :uri, :videoUri);";
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindValue(':id', $goal['id']);
 				$stmt->bindValue(':type', 'GOAL');
 				$stmt->bindValue(':gameId', $goal['gameId']);
 				$stmt->bindValue(':uri', $goal['uri']);
+				$stmt->bindValue(':videoUri', $goal['videoUri']);
 				echo("Adding Goal ".$goal['id']." to DB. \n");
 				return $stmt->execute(); //true if successful
 			} catch (PDOException $e) {

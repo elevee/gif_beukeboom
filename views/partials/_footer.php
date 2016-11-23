@@ -1,6 +1,4 @@
 <?php
-// $root = realpath(dirname(__FILE__));
-// echo($root);
 echo("<section class='row footer'>");
 	echo("<div class='large-12 columns'>");
 		echo("<p class='copyright'>Everything you see here is &copyNHL. I just like goals.  -<a href='http://www.twitter.com/elevee' target='_blank'>@elevee</a></p>");

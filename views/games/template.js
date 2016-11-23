@@ -142,17 +142,20 @@ $(document).ready(function(){
 	//When trim button is pressed on trimGoal modal
 	$('.trimVideo').on('click', function(e){
 		e.preventDefault();
-		var currentTime = $('#trimModal').find('video')[0].currentTime;
+		var $trimModal = $('#trimModal');
+		var currentTime = $trimModal.find('video')[0].currentTime;
 		console.log(currentTime);
 		if(currentTime && confirm("Happy with playhead position of "+currentTime+"?")){
 			$.post({
 				url: "/static/scripts/customGif.php",
 				data: {
+					goalId: $trimModal.attr('data-goalId'), 
 					currentTime: currentTime
 				},
-				success: function(d){
-					console.log("SUCCESS! "+d);
-					$('#trimModal video').attr('src', '');
+				success: function(r){
+					console.log("Response: "+r);
+					$trimModal.attr('data-goalId', '');
+					$trimModal.find('video').attr('src', '');
 					$('.confirmTrimModal').click();
 				}
 			});
