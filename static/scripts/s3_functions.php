@@ -20,7 +20,7 @@ if (is_string($AWS_ACCESS_KEY_ID) && !is_null($AWS_ACCESS_KEY_ID) && is_string($
 	);
 	// Poll the bucket until it is accessible
 	$s3->waitUntil('BucketExists', array('Bucket' => $bucket));
-	echo("S3 open for business.");
+	// echo("S3 open for business.");
 	// Upload a file.
 	// $result = $s3->putObject(array(
 	//     'Bucket'       => $bucket,

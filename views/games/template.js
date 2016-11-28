@@ -132,11 +132,10 @@ $(document).ready(function(){
 			url = $gl.find('.video_linkout a').attr('href'),
 			$trimDiv = $('#trimModal');
 
+		console.log('GID is '+gameId);
 		$trimDiv.attr('data-goalId', id);
+		$trimDiv.attr('data-gameId', gameId);
 		$trimDiv.find('video').attr('src', url);
-
-
-
 	});
 
 	//When trim button is pressed on trimGoal modal
@@ -149,8 +148,9 @@ $(document).ready(function(){
 			$.post({
 				url: "/static/scripts/customGif.php",
 				data: {
-					goalId: $trimModal.attr('data-goalId'), 
-					currentTime: currentTime
+					goalId: $trimModal.attr('data-goalId'),
+					currentTime: currentTime,
+					gameId: $trimModal.attr('data-gameId')
 				},
 				success: function(r){
 					console.log("Response: "+r);

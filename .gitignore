@@ -5,3 +5,4 @@ composer.phar
 .htaccess
 /vendor/
 sftp-config.json
+/tempGifs

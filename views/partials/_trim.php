@@ -1,5 +1,5 @@
 <?php
-echo('<div class="reveal" id="trimModal" data-reveal data-goalId>');
+echo('<div class="reveal" id="trimModal" data-reveal data-goalId data-gameId>');
   echo('<h1>Trim Goal</h1>');
   echo('<p class="lead">Full-length GIFs are bulky and increase load time. Let\'s trim the goal to just the best part.</p>');
   echo('<p>Instructions:</p>');
