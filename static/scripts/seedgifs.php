@@ -37,14 +37,19 @@ if(isset($games) && is_array($games) && count($games) > 0){
 		foreach ($goals as $goal) {
 			// Check to see if we already have that goal
 			if(!gifExists($goal['id'], $pdo)) {
-				if ( $g = createGif($gameId, $goal) ){
+				$gif_settings = array(
+					"gameId" 	=> $gameId,
+					"id"		=> $goal["id"],
+					"videoUri"	=> $goal["videoUri"]
+				);
+				if ( $g = createGif($gif_settings) ){
 					$response = uploadGif($g, $s3);
 					echo("response: \n");
 					print_r($response);
 					if (isset($response) && is_array($response) && !is_null($response['uri'])) {
 						//Delete temp GIF on server
 						echo("Temp Gif Deleted? \n");
-						echo(deleteTempFiles($response['id'], false) ? "Yes" : "Nope");
+						echo(deleteTempFiles(array("id" => $response['id'])) ? "Yes" : "Nope");
 						echo("\n");
 						// Put resulting cloud URI into DB
 						$added = addGifToDB($response, $pdo);
@@ -73,38 +78,38 @@ if(isset($games) && is_array($games) && count($games) > 0){
 
 
 
-function createGif($gameId, $goal){
-	// takes: 
-	// gameId(str) 
-	// $goal (obj) 
-	//    - id (str)
-	//    - videoUri (str)
-	$tmp_path = "../../tempGifs/";
-	if(isset($goal) && isset($goal["videoUri"]) && strlen($goal["videoUri"]) > 0 ){
-		if (!file_exists($tmp_path)) {
-		    mkdir($tmp_path, 0777, true);
-		}
-		if(!file_exists($tmp_path.$goal['id'].".gif")){
-			try {
-				// script [arg1 (videoUrl), arg2 (tmp path/goalId)]
-				$cmd = "./beukeboom.sh ".$goal['videoUri']." ".$tmp_path."/".$goal['id'];
-					// "ffmpeg -i ".$goal['videoUri']." ".$tmp_path.$goal['id'].".gif";
-				escapeshellarg(exec($cmd));
-				echo("GIF processing complete:  ".$goal["id"]."\n");
-			} catch (Exception $e) {
-				echo("Error creating GIF:  ". $e->getMessage() . "\n");
-			}
-		} else {
-			echo("Goal ".$goal["id"]." already exists in tempGif folder.\n");
-		}
-		$output = $goal;
-		$output["gameId"] = $gameId;
-		$output["videoUri"] = $goal["videoUri"];
-		unset($tmp_path, $cmd);
-		return $output; // exports goal object but with gameId and videoUri added in for next step
-	}
-	return null;
-}
+// function createGif($gameId, $goal){
+// 	// takes: 
+// 	// gameId(str) 
+// 	// $goal (obj) 
+// 	//    - id (str)
+// 	//    - videoUri (str)
+// 	$tmp_path = "../../tempGifs/";
+// 	if(isset($goal) && isset($goal["videoUri"]) && strlen($goal["videoUri"]) > 0 ){
+// 		if (!file_exists($tmp_path)) {
+// 		    mkdir($tmp_path, 0777, true);
+// 		}
+// 		if(!file_exists($tmp_path.$goal['id'].".gif")){
+// 			try {
+// 				// script [arg1 (videoUrl), arg2 (tmp path/goalId)]
+// 				$cmd = "./beukeboom.sh ".$goal['videoUri']." ".$tmp_path."/".$goal['id'];
+// 					// "ffmpeg -i ".$goal['videoUri']." ".$tmp_path.$goal['id'].".gif";
+// 				escapeshellarg(exec($cmd));
+// 				echo("GIF processing complete:  ".$goal["id"]."\n");
+// 			} catch (Exception $e) {
+// 				echo("Error creating GIF:  ". $e->getMessage() . "\n");
+// 			}
+// 		} else {
+// 			echo("Goal ".$goal["id"]." already exists in tempGif folder.\n");
+// 		}
+// 		$output = $goal;
+// 		$output["gameId"] = $gameId;
+// 		$output["videoUri"] = $goal["videoUri"];
+// 		unset($tmp_path, $cmd);
+// 		return $output; // exports goal object but with gameId and videoUri added in for next step
+// 	}
+// 	return null;
+// }
 
 // array(
 // 	"**gameId**" => array(

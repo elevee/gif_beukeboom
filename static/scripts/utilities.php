@@ -1,18 +1,14 @@
 <?php
 date_default_timezone_set('America/Los_Angeles');
 function createGif($s){ //$s == settings
-	// settings: 
-	$s["gameId"] 		? $s["gameId"] 		: null;
-	$s["id"] 			? $s["id"] 			: null;
-	$s["videoUri"] 		? $s["videoUri"]	: null;
-	$s["tmpPath"] 		? $s["tmpPath"] 	: null;
-	$s["isShortGif"] 	? true 				: false;
-
 	if(isset($s) && isset($s["videoUri"]) && strlen($s["videoUri"]) > 0 ){
+		// settings: 
+		$s["tmpPath"] 	= isset($s["tmpPath"]) 	? $s["tmpPath"] 	: dirname(__FILE__) . "/../../tempGifs/";
+
 		if (!file_exists($s["tmpPath"])) {
 		    mkdir($s["tmpPath"], 0777, true);
 		}
-		$filePath = $s["tmpPath"].$s['id']. ($s["isShortGif"]?"_s.gif":".gif");
+		$filePath = $s["tmpPath"].$s['id'].($s["isShortGif"]?"_s.gif":".gif");
 		if(!file_exists($filePath)){
 			$cmd = dirname(__FILE__)."/beukeboom.sh ".$s['videoUri']." ".$s["tmpPath"]."/";
 			try {
@@ -32,23 +28,20 @@ function createGif($s){ //$s == settings
 		} else {
 			echo("Goal ".$s["id"]." already exists in tempGif folder.\n");
 		}
-		unset($tmp_path, $cmd);
+		unset($filePath, $cmd);
 		return $s;
 	}
 	return null;
 }
 
-function deleteTempFiles($goalId, $shortGif = false){ //naming different for shortgifs
+function deleteTempFiles($s){ //naming different for shortgifs
 	// settings: 
-	$s["id"] 			? $s["id"] 			: null; //goal id
-	$s["videoUri"] 		? $s["videoUri"]	: null;
-	$s["tmpPath"] 		? $s["tmpPath"] 	: null;
-	$s["isShortGif"] 	? true 				: false;
+	$s["tmpPath"] 	= isset($s["tmpPath"]) 	? $s["tmpPath"] 	: dirname(__FILE__) . "/../../tempGifs/";
 
-	if(isset($goalId) && strlen($goalId > 0)){
+	if(isset($s["id"]) && strlen($s["id"] > 0) && isset($s["tmpPath"])){
 		$files = array( 
-			"../../tempGifs/".$goalId.".gif",
-			"../../tempGifs/".$goalId.".png",
+			$s["tmpPath"].$s["id"].(isset($s["isShortGif"])?"_s":"").".gif",
+			$s["tmpPath"].$s["id"].(isset($s["isShortGif"])?"_s":"").".png",
 		);	
 		foreach ($files as $file) {
 			if (file_exists($file)){
