@@ -31,11 +31,16 @@ function findStandingsFor($res, $teamId, $type){ //type "conference", "division"
 	return false;
 }
 
+function getScorerInfo(){
+
+}
+
 if (isset($gameId) && strlen($gameId) > 0){
   	// getGoalsForGame();
 	// $goals 	= array();
 	$avail_prds = array(1,2,3,4,5); //remaining ones will show as 'No Scoring'
 
+	$feed_uri		= "https://statsapi.web.nhl.com/api/v1/game/".$gameId."/feed/live?site=en_nhl";
 	$sched_uri 		= "https://statsapi.web.nhl.com/api/v1/schedule?gamePk=".$gameId."&expand=schedule.teams,schedule.linescore,schedule.broadcasts.all,schedule.ticket,schedule.game.content.media.epg,schedule.decisions,schedule.scoringplays,schedule.game.content.highlights.scoreboard,team.leaders&leaderCategories=points,goals,assists&site=en_nhl&teamId=";
 	$media_uri 		= "https://statsapi.web.nhl.com/api/v1/game/".$gameId."/content";
 	$stand_uri		= "https://statsapi.web.nhl.com/api/v1/standings/wildCardWithLeaders?expand=standings.record,standings.team,standings.division,standings.conference,team.schedule.next,team.schedule.previous&season=20162017";
@@ -45,6 +50,7 @@ if (isset($gameId) && strlen($gameId) > 0){
 
 	$schedRes = json_decode(CallAPI('GET', $sched_uri), true);
 	$mediaRes = json_decode(CallAPI('GET', $media_uri), true);
+	$feedRes  = json_decode(CallAPI('GET', $feed_uri), true);
 
 	$_game = ( $schedRes["dates"][0]["games"] && $schedRes["dates"][0]["games"][0] && count($schedRes["dates"][0]["games"]) == 1) ? $schedRes["dates"][0]["games"][0] : null;
 	if (isset($_game) && is_array($_game)){
@@ -82,76 +88,98 @@ if (isset($gameId) && strlen($gameId) > 0){
 	}
 
 	$goal_ctr = 0;
-	foreach ($_game["scoringPlays"] as $index => $scoringPlay) {
-		$period = $scoringPlay["about"]["period"];
-		$scorer;
-		$scorerId;
-		$milestones = $mediaRes["media"]["milestones"]["items"];
+	
+	// 	} else if ($milestone["type"] == "GOAL" && $milestone["period"] == $period && $milestone["periodTime"] == $scoringPlay["about"]["periodTime"]) {
+	// 		// Some shootout goals that lack a highlight will share the same goal time (0:00), period, etc
+	// 		$game["goals"][$goal_ctr]["scorer"] 		= $scorer;
+	// 		$game["goals"][$goal_ctr]["playerId"] 		= $playerId;
+	// 		$game["goals"][$goal_ctr]["period"] 		= $milestone["period"];
+	// 		$game["goals"][$goal_ctr]["time"]			= $milestone["periodTime"];
+	// 		$game["goals"][$goal_ctr]["isHomeTeam"] 	= $scoringPlay["team"]["name"] === $_game["teams"]["home"]["team"]["name"] ? true : false;
+	// 		$goal_ctr++;
+	
 
-		foreach ($scoringPlay["players"] as $player) {
-			if($player["playerType"] === "Scorer") {
-				$scorer 	= $player["player"]["fullName"];
-				$playerId 	= $player["player"]["id"];
-				$seasonTotal= $player["seasonTotal"];
-			}
-			//Assists?
-		}
-
-		// echo "<pre>";
-		// print_r($scoringPlay);
-		// echo "</pre>";
-		
-		if(isset($milestones) && count($milestones) > 0){	
-			foreach ($milestones as $i => $milestone) {
-				if($milestone["type"] == "GOAL" && $milestone["statsEventId"] == $scoringPlay["about"]["eventId"] ){ //$milestone["period"] == $period wasn't nec., $milestone["playerId"] == $playerId was giving false positives
-					// $game["goals"][] = $milestone; //if we want the whole thing
-					$game["goals"][$goal_ctr]["scorer"]			= $scorer;
-					$game["goals"][$goal_ctr]["scorer_expanded"]= $milestone["description"];
-					$game["goals"][$goal_ctr]["playerId"]		= $playerId;
-					$game["goals"][$goal_ctr]["seasonTotal"]	= $seasonTotal;
-					$game["goals"][$goal_ctr]["period"] 		= $milestone["period"];
-					$game["goals"][$goal_ctr]["time"]			= $milestone["periodTime"];
-					$game["goals"][$goal_ctr]["description"] 	= $milestone["highlight"]["description"];
-					$game["goals"][$goal_ctr]["isHomeTeam"] 	= $scoringPlay["team"]["name"] === $_game["teams"]["home"]["team"]["name"] ? true : false;
-					$game["goals"][$goal_ctr]["goalId"] 		= $milestone["highlight"]["mediaPlaybackId"];
-					$game["goals"][$goal_ctr]["gifUri"] 		= getGif($milestone["highlight"]["mediaPlaybackId"], $pdo);
-
-					$pbs = $milestone["highlight"]["playbacks"];
-					foreach ($pbs as $k => $v) {
-						if($v["name"] == $_linkout_video){
-							$game["goals"][$goal_ctr]["video_linkout"]	= $v["url"];
+	if (isset($feedRes)){
+		$_game_data = $feedRes["gameData"];
+		$_live_data = $feedRes["liveData"];
+	
+		if(isset($_live_data)){
+			foreach ($_live_data["plays"]["scoringPlays"] as $k => $playId) {
+				$scorer;
+				$playerId;
+				$seasonTotal;
+				foreach($_live_data["plays"]["allPlays"] as $play) {
+					if($play["about"]["eventIdx"] == $playId){
+						foreach ($play["players"] as $player) {
+							if($player["playerType"] === "Scorer") {
+								$scorer 	= $player["player"]["fullName"];
+								$playerId 	= $player["player"]["id"];
+								$seasonTotal= $player["seasonTotal"];
+							}
+							//Assists?
 						}
-					}
-					// Image previews if GIF hasn't processed yet
-					$prevs = $milestone["highlight"]["image"]["cuts"];
-					foreach ($prevs as $k => $v) {
-						if($k == $_placeholder_image){
-							$game["goals"][$goal_ctr]["placeholder_img"] = $v["src"];
+						// SET ALL WE NEED HERE from feed
+						$game["goals"][$goal_ctr]["scorer"]			= $scorer;
+						// $game["goals"][$goal_ctr]["scorer_expanded"]= isset($milestone["description"]) ? $milestone["description"] : null;
+						$game["goals"][$goal_ctr]["playerId"]		= $playerId;
+						$game["goals"][$goal_ctr]["seasonTotal"]	= $seasonTotal;
+						$game["goals"][$goal_ctr]["period"] 		= $play["about"]["period"];
+						$game["goals"][$goal_ctr]["time"]			= $play["about"]["periodTime"];
+						$game["goals"][$goal_ctr]["isHomeTeam"] 	= $play["team"]["name"] === $_game["teams"]["home"]["team"]["name"] ? true : false;
+
+						// Now add media
+						if(isset($mediaRes) && isset($mediaRes["media"]["milestones"]["items"]) ){
+							$milestones = $mediaRes["media"]["milestones"]["items"];
+							foreach ($milestones as $milestone){
+								if($milestone["statsEventId"] == $play["about"]["eventId"]){ //&& $milestone["type"] === "GOAL"
+									// echo("<pre>");
+									// print_r($milestone);
+									// echo("</pre>");
+									
+									if ($milestone["highlight"]){
+										$game["goals"][$goal_ctr]["description"]  	= $milestone["highlight"]["description"];
+										$game["goals"][$goal_ctr]["goalId"] 		= $milestone["highlight"]["mediaPlaybackId"];
+										$game["goals"][$goal_ctr]["gifUri"] 		= getGif($milestone["highlight"]["mediaPlaybackId"], $pdo);
+										$game["goals"][$goal_ctr]["shortGifUri"] 	= getGif($milestone["highlight"]["mediaPlaybackId"], $pdo, true);
+									
+										$pbs = isset($milestone["highlight"]["playbacks"]) ? $milestone["highlight"]["playbacks"] : null;
+										if($pbs){
+											foreach ($pbs as $k => $v) {
+												if($v["name"] == $_linkout_video){
+													$game["goals"][$goal_ctr]["video_linkout"]	= $v["url"];
+												}
+											}
+										}
+										// Image previews if GIF hasn't processed yet
+										$prevs = isset($milestone["highlight"]["image"]) ? $milestone["highlight"]["image"]["cuts"] : null;
+										if($prevs){
+											foreach ($prevs as $k => $v) {
+												if($k == $_placeholder_image){
+													$game["goals"][$goal_ctr]["placeholder_img"] = $v["src"];
+												}
+											}
+										}
+									}
+									// echo($scorer.":  ".$milestone['gifUri']."?<br>");
+									break;
+								}
+							}
 						}
+						$goal_ctr++;
+						break;
 					}
-					$goal_ctr++;
-					break; //there could be duplicates of the same goal. Putting an end to that.
-				} else if ($milestone["type"] == "GOAL" && $milestone["period"] == $period && $milestone["periodTime"] == $scoringPlay["about"]["periodTime"]) {
-					// Some shootout goals that lack a highlight will share the same goal time (0:00), period, etc
-					$game["goals"][$goal_ctr]["scorer"] 		= $scorer;
-					$game["goals"][$goal_ctr]["playerId"] 		= $playerId;
-					$game["goals"][$goal_ctr]["period"] 		= $milestone["period"];
-					$game["goals"][$goal_ctr]["time"]			= $milestone["periodTime"];
-					$game["goals"][$goal_ctr]["isHomeTeam"] 	= $scoringPlay["team"]["name"] === $_game["teams"]["home"]["team"]["name"] ? true : false;
-					$goal_ctr++;
 				}
+				// echo($scorer." (".$seasonTotal.") <br>");
 			}
 		}
 	}
+	
 	unset($goal_ctr);
 
-	// echo("GOALS PARSED FROM MEDIA BY TYPE GOAL, (dupes in past): <br />");
 	// echo "<pre>";
-	// print_r($game); 
+	// print_r($game["goals"]);
 	// echo "</pre>";
 	// echo("count: ". count($game['goals']));
-
-
 
 	if(isset($game["awayTeamName"]) && strlen($game["awayTeamName"]) > 0 && isset($game["homeTeamName"]) && strlen($game["homeTeamName"]) > 0){
 		$state['title'] = $game["awayTeamName"]." vs. ". $game["homeTeamName"]." | GIF Beukeboom";

@@ -41,15 +41,16 @@ if (is_string($AWS_ACCESS_KEY_ID) && !is_null($AWS_ACCESS_KEY_ID) && is_string($
 // echo "does object exist? \n";
 // $s3->doesObjectExist($bucket, "/45400503.gif");
 
-function uploadGif($goal, &$s3) {
+function uploadGif($goal, &$s3, $isShortGif = false) {
 	global $bucket;
-	$key = $goal['gameId']."/".$goal['id'].".gif";
-	$file = "../../tempGifs/".$goal['id'].".gif";
-	// echo("Key:  ". $key. "\n");
+	$key = $goal['gameId']."/".$goal['id'].(isset($isShortGif) && $isShortGif == true ? "_s.gif" : ".gif");
+	$file = $goal["tmpPath"].$goal['id'].(isset($isShortGif) && $isShortGif == true ? "_s.gif" : ".gif");
+	echo("\nKey:  ". $key. "\n");
+	echo("\nFile:  ". $file. "\n");
 	if (file_exists($file)) {  //!$s3->doesObjectExist($bucket, $key)
 		//TODO: check for already uploaded gif first?
 		try {
-			echo("uploadGif: started \n");
+			echo("\nuploadGif: started \n");
 		    $res = $s3->putObject(array( 
 				'Bucket' 		=> $bucket,
 				'Key'    		=> $key,

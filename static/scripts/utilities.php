@@ -8,25 +8,26 @@ function createGif($s){ //$s == settings
 		if (!file_exists($s["tmpPath"])) {
 		    mkdir($s["tmpPath"], 0777, true);
 		}
-		$filePath = $s["tmpPath"].$s['id'].($s["isShortGif"]?"_s.gif":".gif");
+		$filePath = $s["tmpPath"].$s['id'].(isset($s["isShortGif"])?"_s.gif":".gif");
+		echo("\nFilepath:".$filePath."\n");
 		if(!file_exists($filePath)){
-			$cmd = dirname(__FILE__)."/beukeboom.sh ".$s['videoUri']." ".$s["tmpPath"]."/";
+			// echo("\nFile doesn't exist. Good...\n");
+			$cmd = dirname(__FILE__)."/beukeboom.sh ".$s['videoUri']." ".$s["tmpPath"];
 			try {
-				// echo("command is ".$cmd."\n");
 				// script [arg1 (videoUrl), arg2 (tmp path/goalId)]
 				if (isset($s["isShortGif"])){
 					$cmd .= $s['id']." short ".$s["start"]." ".$s["duration"];
 				} else {
 					$cmd .= $s['id'];
 				}
-				
-				escapeshellarg(exec($cmd));
-				echo("GIF processing complete:  ".$s["id"]."\n");
+				// echo("\ncommand is: ".$cmd."\n");
+				escapeshellarg(shell_exec($cmd));
 			} catch (Exception $e) {
 				echo("Error creating GIF:  ". $e->getMessage() . "\n");
 			}
+			// echo("GIF processing complete:  ".$s["id"].(isset($s["isShortGif"])?"_s.gif":".gif"));
 		} else {
-			echo("Goal ".$s["id"]." already exists in tempGif folder.\n");
+			// echo("Goal ".$s["id"].(isset($s["isShortGif"])?"_s.gif":".gif")." already exists in tempGif folder.\n");
 		}
 		unset($filePath, $cmd);
 		return $s;

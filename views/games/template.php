@@ -20,27 +20,36 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 				$output .= "<div class='goal ". ($gl["isHomeTeam"] ? "home":"away")."Goal'>";
 					$output .= "<span class='name'>".$gl["scorer"]."</span>";
 					if ($period !== "5"){ //shootout goals apparently don't count towards goal total
-						$output .= "<span class='seasonTotal'>  (".$gl["seasonTotal"].")</span>";
+						$output .= isset($gl["seasonTotal"]) ? "<span class='seasonTotal'>  (".$gl["seasonTotal"].")</span>" : "";
 					}
 					$output .= "<br/>";
 					$output .= isset($gl["video_linkout"]) ? "<h7 class='video_linkout'>"."<a href='".$gl["video_linkout"]."' target='_blank'>"."<i class='fa fa-television fa-lg' aria-hidden='true'></i>"."</a></h7>" : "";
-					$output .= isset($gl["shortGifUri"]) ? "" : "<h7>"."<a href='#' data-open='trimModal' class='trim'>"."<i class='fa fa-scissors fa-lg' aria-hidden='true'></i>"."</a></h7>";
+					$output .= (isset($gl["shortGifUri"]) && strlen($gl["shortGifUri"]) > 0) || (!isset($gl["gifUri"]) && !isset($gl["shortGifUri"]))? "" : "<h7>"."<a href='#' data-open='trimModal' class='trim'>"."<i class='fa fa-scissors fa-lg' aria-hidden='true'></i>"."</a></h7>";
 					include_once dirname(__FILE__).'/../partials/_trim.php';
-					$output .= "<div class='".($gl["gifUri"] ? "goalGif" : "goalPlaceholder")." loading' style='position: relative;' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
-						// $output .= "<div class='large-12 columns' >";
-						if($gl["gifUri"]){
-							$output .= "<img src='".$gl["placeholder_img"]."' data-gif='".$gl["gifUri"]."' />";
-							$output .= "<i class='fa fa-play fa-5x' aria-hidden='true'></i>";
-							$output .= "<i class='fa fa-circle-o-notch fa-spin fa-4x fa-fw'></i>";
-							$output .= "<span class='sr-only'>Loading...</span>";
-						} else if ($gl["placeholder_img"]) { // No GIF yet!
-							$output .= "<img src='".$gl["placeholder_img"]."' />";
-							$output .= "<span class='processing'>Processing</span>";
-						} else {
-							$output .= "<p>No goal video available to GIF!</p>";
-						}
-						// $output .= "</div>";
-					$output .= "</div>";
+					$short_gif_set = isset($gl["shortGifUri"]) && strlen($gl["shortGifUri"]) > 0;
+					$gif_set = isset($gl["gifUri"]) && strlen($gl["gifUri"]) > 0;
+					if(isset($gl["video_linkout"])){	
+						$output .= "<div class='".($short_gif_set || $gif_set ? "goalGif" : "goalPlaceholder")." loading' style='position: relative;' data-playbackId='".$gl["goalId"]."' data-playbackUrl='".$gl["video_linkout"]."'>";
+							if($short_gif_set){
+								$output .= "<img src='".$gl["placeholder_img"]."' data-gif='".$gl["shortGifUri"]."' />";
+								$output .= "<i class='fa fa-play fa-5x' aria-hidden='true'></i>";
+								$output .= "<i class='fa fa-circle-o-notch fa-spin fa-4x fa-fw'></i>";
+								$output .= "<span class='sr-only'>Loading...</span>";
+							} else if($gif_set){
+								$output .= "<img src='".$gl["placeholder_img"]."' data-gif='".$gl["gifUri"]."' />";
+								$output .= "<i class='fa fa-play fa-5x' aria-hidden='true'></i>";
+								$output .= "<i class='fa fa-circle-o-notch fa-spin fa-4x fa-fw'></i>";
+								$output .= "<span class='sr-only'>Loading...</span>";
+							} else if (isset($gl["placeholder_img"])) { // No GIF yet!
+								$output .= "<img src='".$gl["placeholder_img"]."' />";
+								$output .= "<span class='processing'>Processing</span>";
+							} else {
+								$output .= "<p>No goal video available to GIF!</p>";
+							}
+						$output .= "</div>";
+					} else {
+						$output .= "<p>No goal video available to GIF!</p>";
+					}
 					$output .= "<span class='time'>". ($period == "5" ? "" : $gl["time"]) ."</span>";
 				$output .= "</div>";
 			}

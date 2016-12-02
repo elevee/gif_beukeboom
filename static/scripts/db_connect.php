@@ -1,4 +1,8 @@
 <?php
+// ini_set('mysql.connect_timeout', 300);
+// ini_set('mysql.connect_timeout',1)
+// ini_set('default_socket_timeout', 300);
+// ini_set("default_socket_timeout", 2);
 // include_once("../../path.php"); //for uniform path on includes
 // if (file_exists("../../_env.php")){  //Dev
 // 	include_once("../../_env.php");
@@ -30,7 +34,9 @@ try {
 		$user,
 		$password
 	);
+	// $pdo->prepare("set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000");
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	// $pdo->setAttribute(PDO::ATTR_TIMEOUT, 10000);
 	// $pdo->exec('SET NAMES "utf8"');
 } catch (PDOException $e) {
 	echo("Unable to connect to the DB server."); //$e."\n");
@@ -157,6 +163,26 @@ function addGifToDB($goal, &$pdo){
 	return false;
 }
 
+function addShortGifToDB($goal, &$pdo){
+	if (isset($goal) && is_array($goal)){
+		if(gifExists($goal['id'], $pdo)){
+			try {
+				$sql = "UPDATE highlights SET short_gif_uri = :shortGifUri WHERE id = :id";
+				$stmt = $pdo->prepare($sql);
+				$stmt->bindValue(':id', $goal['id']);
+				$stmt->bindValue(':shortGifUri', $goal['uri']);
+				echo("Updating Goal ".$goal['id']." with shortGif in DB. \n");
+				return $stmt->execute(); //true if successful
+			} catch (PDOException $e) {
+				echo("Error adding short GIF to goal ".$goal['id']." \n". $e);
+			}
+		} else {
+			echo("Goal ".$goal['id']." doesn't exist as a DB row. \n");
+		}
+	}
+	return false;
+}
+
 function deleteGifFromDB($goalId){
 	global $pdo;
 	if (isset($goal) && is_array($goal)){
@@ -203,23 +229,28 @@ function gifExists($goalId, &$pdo){
 				return true;
 			}
 		} catch (PDOException $e) {
-			echo("Error checking to see if ".$goal['id']." exists.\n");
+			echo("Error checking to see if ".$goalId." exists.\n");
 			// echo($e->getMessage());
 		}
 	}
 	return false;
 }
 
-function getGif($goalId, &$pdo){
+function getGif($goalId, &$pdo, $isShortGif = false){
 	//returns the uri if exists in DB
+	// combined query, if we want to use later:
+	// SELECT gif_uri,short_gif_uri FROM highlights WHERE id = XXXXXXX
+	// echo("------ isShortGif is ".$isShortGif."--------");
 	if(isset($goalId)){
 		try {
-			$sql = "SELECT (gif_uri) FROM highlights WHERE id = :goalId;";
+			$field = (isset($isShortGif) && $isShortGif == 1)?"short_gif_uri":"gif_uri";
+			$sql = "SELECT ".$field." FROM highlights WHERE id = :goalId;";
 			$stmt = $pdo->prepare($sql);
 			$stmt->execute(['goalId' => $goalId]); 
 			$result = $stmt->fetch();
-			if (isset($result) && isset($result["gif_uri"]) && strlen($result["gif_uri"]) > 0){
-				return $result["gif_uri"];
+			// print_r($result);
+			if ( isset($result) && isset($result[$field]) && strlen($result[$field]) > 0) { // && $result[$field] !== "NULL"){
+				return $result[$field];
 			}
 		} catch (PDOException $e) {
 			echo("Error retrieving ".$goal['id']." URI.\n");
