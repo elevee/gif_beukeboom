@@ -18,8 +18,7 @@ class GifCreationTest extends TestCase {
 		$this->gif1 = array(
 			"id" 		=> $id,
 			"gameId" 	=> $gameId,
-			"videoUri" 	=> $videoUri,
-			// "tmpPath" 	=> $tmpPath
+			"videoUri" 	=> $videoUri
 		);
 
         $this->shortGif1 = array(
@@ -28,8 +27,7 @@ class GifCreationTest extends TestCase {
 			"videoUri" 		=> $videoUri,
 			"isShortGif" 	=> true,
 			"start" 		=> 30,
-			"duration" 		=> 6,
-			// "tmpPath" 		=> $tmpPath
+			"duration" 		=> 6
         );
     }
 
