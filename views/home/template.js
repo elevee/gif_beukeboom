@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	var $date_display = $('.day .date_display');
 	var date_input = $('.day').attr('data-date');
 	var json_url = "https://statsapi.web.nhl.com/api/v1/schedule?startDate="+date_input+"&endDate="+date_input+"&expand=schedule.teams,schedule.linescore,schedule.broadcasts.all,schedule.ticket,schedule.game.content.media.epg,schedule.decisions,schedule.scoringplays,schedule.game.content.highlights.scoreboard,team.leaders&leaderCategories=points,goals,assists&site=en_nhl&teamId=";
 	// console.log("json url we're fetching is ", json_url);
@@ -6,7 +7,12 @@ $(document).ready(function(){
 		$.get(json_url, null, function(data){
 			// console.log("success!", data);
 			$games = $('.games table');
-			$('.day span').html("<a href='/?date="+ moment(date_input).subtract(1, 'days').format("YYYY-MM-DD") + "'><span class='yesterday'>&lt </span></a>" + moment(date_input).format("dddd, MMMM Do") + "<a href='/?date="+ moment(date_input).add(1, 'days').format("YYYY-MM-DD") + "'><span class='tomorrow'> &gt</span></a>");
+			var yesterday = "<a href='/?date="+ moment(date_input).subtract(1, 'days').format("YYYY-MM-DD") + "'><span class='yesterday'>&lt </span></a>";
+			var	dateText = moment(date_input).format("dddd, MMMM Do");
+			var tomorrow = "<a href='/?date="+ moment(date_input).add(1, 'days').format("YYYY-MM-DD") + "'><span class='tomorrow'> &gt</span></a>";
+			$date_display.before(yesterday);
+			$date_display.html(dateText);
+			$date_display.after(tomorrow);
 			if(data["dates"] && data["dates"].length > 0){
 				var date 	= data["dates"][0]["date"], 
 					games 	= data["dates"][0]["games"];
@@ -95,4 +101,17 @@ $(document).ready(function(){
 	// $.get(goalUri, null, function(data){
 	// 	 console.log("Example of a goal data fetch: ", data);
 	// });
+
+	var picker = new Pikaday({ 
+		field: $('.day span')[0],
+		format: 'YYYY-MM-DD',
+		onSelect: function(date){
+			var d = this.getMoment().format('YYYY-MM-DD');
+			// console.log(d);
+			if (d){
+				console.log(window.location);
+				window.location.replace(window.location.origin+"/?date="+d);
+			}
+		}
+	});
 });

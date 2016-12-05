@@ -200,6 +200,7 @@ echo("<html xmlns='http://www.w3.org/1999/xhtml' lang='en'>");
 
 		echo("<script type='text/javascript' src='/static/scripts/vendor/foundation-6.2.3/js/vendor/jquery.js'></script>");
 		echo("<script src='/static/scripts/vendor/momentjs-2.15.1/moment.js'></script>");
+		echo("<script src='/static/scripts/common.js'></script>");
 
 		//Google Analytics
 		echo('<script>');

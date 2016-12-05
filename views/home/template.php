@@ -1,7 +1,7 @@
 <?php
 echo("<div class='row'>");
 	echo("<div class='large-12 columns day' data-date='".$date."'>");
-		echo("<span></span>");
+		echo("<div><span class='date_display'></span></div>");
 	echo("</div>");
 echo("</div>");
 echo("<div class='row'>");
@@ -9,3 +9,5 @@ echo("<div class='row'>");
 		echo("<table></table>");
 	echo("</div>");
 echo("</div>");
+
+echo('<script src="/static/scripts/vendor/pikaday-1.5.1/pikaday.js"></script>');

@@ -5,4 +5,3 @@ echo("<section class='row footer'>");
 	echo("</div>");
 echo("</section>");
 echo("<script type='text/javascript' src='/static/scripts/vendor/foundation-6.2.3/js/vendor/foundation.min.js'></script>");
-echo("<script src='/static/scripts/common.js'></script>");
