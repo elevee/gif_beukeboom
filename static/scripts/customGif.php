@@ -10,7 +10,7 @@ $duration 		= 7; //default duration
 $gameId 		= isset($_POST["gameId"]) ? $_POST["gameId"] : null;
 $video_uri  	= null;
 
-$start = $currentTime > 5 ? $currentTime - 5 : null; //starting goal 5s from marker;
+$start = $currentTime > 5 ? $currentTime - 5 : 0; //starting goal 5s from marker;
 
 // Retrieve video_uri from DB so people don't tamper
 if(isset($goalId)){

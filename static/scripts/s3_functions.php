@@ -45,12 +45,12 @@ function uploadGif($goal, &$s3, $isShortGif = false) {
 	global $bucket;
 	$key = $goal['gameId']."/".$goal['id'].(isset($isShortGif) && $isShortGif == true ? "_s.gif" : ".gif");
 	$file = $goal["tmpPath"].$goal['id'].(isset($isShortGif) && $isShortGif == true ? "_s.gif" : ".gif");
-	echo("\nKey:  ". $key. "\n");
-	echo("\nFile:  ". $file. "\n");
+	// echo("\nKey:  ". $key. "\n");
+	// echo("\nFile:  ". $file. "\n");
 	if (file_exists($file)) {  //!$s3->doesObjectExist($bucket, $key)
 		//TODO: check for already uploaded gif first?
 		try {
-			echo("\nuploadGif: started \n");
+			// echo("\nuploadGif: started \n");
 		    $res = $s3->putObject(array( 
 				'Bucket' 		=> $bucket,
 				'Key'    		=> $key,
@@ -59,12 +59,12 @@ function uploadGif($goal, &$s3, $isShortGif = false) {
 				'StorageClass' 	=> 'REDUCED_REDUNDANCY',
 				'ACL'    		=> 'authenticated-read'
 			));
-			echo $res['Expiration'] . "\n";
-			echo $res['ServerSideEncryption'] . "\n";
-			echo $res['ETag'] . "\n";
-			echo $res['VersionId'] . "\n";
-			echo $res['RequestId'] . "\n";
-			echo $res['ObjectURL'] . "\n";
+			// echo $res['Expiration'] . "\n";
+			// echo $res['ServerSideEncryption'] . "\n";
+			// echo $res['ETag'] . "\n";
+			// echo $res['VersionId'] . "\n";
+			// echo $res['RequestId'] . "\n";
+			// echo $res['ObjectURL'] . "\n";
 			// We can poll the object until it is accessible
 			// $s3->waitUntil('ObjectExists', array(
 			//     'Bucket' => $bucket,

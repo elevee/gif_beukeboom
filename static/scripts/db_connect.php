@@ -171,7 +171,7 @@ function addShortGifToDB($goal, &$pdo){
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindValue(':id', $goal['id']);
 				$stmt->bindValue(':shortGifUri', $goal['uri']);
-				echo("Updating Goal ".$goal['id']." with shortGif in DB. \n");
+				// echo("Updating Goal ".$goal['id']." with shortGif in DB. \n");
 				return $stmt->execute(); //true if successful
 			} catch (PDOException $e) {
 				echo("Error adding short GIF to goal ".$goal['id']." \n". $e);

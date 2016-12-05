@@ -1,13 +1,13 @@
 <?php
-// if(!session_id()) {
-//     session_start();
-// }
 date_default_timezone_set('America/Los_Angeles');
 // include_once("path.php"); //for uniform path on includes
 require dirname(__FILE__).'/vendor/autoload.php';
 require_once(dirname(__FILE__)."/vendor/facebook/graph-sdk/src/Facebook/autoload.php");
 // require ABSPATH."/static/scripts/slack_webhook.php");
 include_once(dirname(__FILE__)."/fb_login.php");
+if(!session_id()) {
+    session_start();
+}
 include_once(dirname(__FILE__)."/_env.php");
 
 include_once(dirname(__FILE__)."/static/scripts/error_mode.php");
@@ -200,6 +200,16 @@ echo("<html xmlns='http://www.w3.org/1999/xhtml' lang='en'>");
 
 		echo("<script type='text/javascript' src='/static/scripts/vendor/foundation-6.2.3/js/vendor/jquery.js'></script>");
 		echo("<script src='/static/scripts/vendor/momentjs-2.15.1/moment.js'></script>");
+
+		//Google Analytics
+		echo('<script>');
+		  echo("(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');");
+		  echo("ga('create', 'UA-88342983-1', 'auto');");
+		  echo("ga('send', 'pageview');");
+		echo('</script>');
 
 		// if the user has selected a valid view, and a template.js file exists, we load that now...
 		if(isset($state["view"]) && is_string($state["view"])) { // && in_array($state["view"], array_merge(array_keys($views), array_keys($special_views)), true)) {

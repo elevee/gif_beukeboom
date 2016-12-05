@@ -172,6 +172,11 @@ h7 {
 	width: 800px;
 }
 
+#trimModal .emphasis {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
 .trimVideo {
 	width: 150px;
 	border-radius: 5px;

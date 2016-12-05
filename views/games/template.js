@@ -143,8 +143,10 @@ $(document).ready(function(){
 		e.preventDefault();
 		var $trimModal = $('#trimModal');
 		var currentTime = $trimModal.find('video')[0].currentTime;
-		console.log(currentTime);
+		var $button = $(this);
+		// console.log(currentTime);
 		if(currentTime && confirm("Happy with playhead position of "+currentTime+"?")){
+			$button.attr('disabled', true);
 			$.post({
 				url: "/static/scripts/customGif.php",
 				data: {
@@ -153,10 +155,11 @@ $(document).ready(function(){
 					gameId: $trimModal.attr('data-gameId')
 				},
 				success: function(r){
-					console.log("Response: "+r);
+					// console.log("Response: "+r);
 					$trimModal.attr('data-goalId', '');
 					$trimModal.find('video').attr('src', '');
 					$('.confirmTrimModal').click();
+					$button.attr('disabled', false);
 				}
 			});
 		}

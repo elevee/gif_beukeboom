@@ -9,7 +9,7 @@ function createGif($s){ //$s == settings
 		    mkdir($s["tmpPath"], 0777, true);
 		}
 		$filePath = $s["tmpPath"].$s['id'].(isset($s["isShortGif"])?"_s.gif":".gif");
-		echo("\nFilepath:".$filePath."\n");
+		// echo("\nFilepath:".$filePath."\n");
 		if(!file_exists($filePath)){
 			// echo("\nFile doesn't exist. Good...\n");
 			$cmd = dirname(__FILE__)."/beukeboom.sh ".$s['videoUri']." ".$s["tmpPath"];

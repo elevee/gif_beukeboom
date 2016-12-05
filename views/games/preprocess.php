@@ -31,10 +31,6 @@ function findStandingsFor($res, $teamId, $type){ //type "conference", "division"
 	return false;
 }
 
-function getScorerInfo(){
-
-}
-
 if (isset($gameId) && strlen($gameId) > 0){
   	// getGoalsForGame();
 	// $goals 	= array();
