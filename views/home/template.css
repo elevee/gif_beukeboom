@@ -3,6 +3,15 @@
 	font-size: 28px;
 }
 
+.day .date_display {
+	cursor: pointer;
+}
+
+.day .date_display:hover {
+	background-color: #f9fafc;
+	border-radius: 5px;
+}
+
 table {
 	/*width: 50%;*/
 	margin: 0 auto;
