@@ -14,9 +14,9 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 		}
 		foreach ($goals as $k => $gl) {
 			if($gl["period"] == $period){
-				// echo "<pre>";
-				// print_r($gl);
-				// echo "</pre>";
+				echo "<pre>";
+				print_r($gl);
+				echo "</pre>";
 				$output .= "<div class='goal ". ($gl["isHomeTeam"] ? "home":"away")."Goal'>";
 					$output .= "<span class='name'>".$gl["scorer"]."</span>";
 					if ($period !== "5"){ //shootout goals apparently don't count towards goal total
@@ -25,6 +25,8 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 					$output .= "<br/>";
 					$output .= isset($gl["video_linkout"]) ? "<h7 class='video_linkout'>"."<a href='".$gl["video_linkout"]."' target='_blank'>"."<i class='fa fa-television fa-lg' aria-hidden='true'></i>"."</a></h7>" : "";
 					$output .= (isset($gl["shortGifUri"]) && strlen($gl["shortGifUri"]) > 0) || (!isset($gl["gifUri"]) && !isset($gl["shortGifUri"]))? "" : "<h7>"."<a href='#' data-open='trimModal' class='trim'>"."<i class='fa fa-scissors fa-lg' aria-hidden='true'></i>"."</a></h7>";
+					$output .= "<i class='favorite fa ".(isset($gl["favorited"]) ? "fa-heart":"fa-heart-o")." fa-lg' aria-hidden='true'></i>";
+					$output .= isset($gl["popularity"]) ? "<span class='popularity'>".$gl["popularity"]."</span>" : "";
 					include_once dirname(__FILE__).'/../partials/_trim.php';
 					$short_gif_set = isset($gl["shortGifUri"]) && strlen($gl["shortGifUri"]) > 0;
 					$gif_set = isset($gl["gifUri"]) && strlen($gl["gifUri"]) > 0;

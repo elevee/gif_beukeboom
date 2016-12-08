@@ -4,6 +4,8 @@ include_once(dirname(__FILE__)."/../../static/scripts/db_connect.php");
 
 // echo("Preprocessing game");
 $gameId = trim($state['id']); //scrub ID somehow to rid it of injection
+$userId = userInDB(array("fbId" => $_SESSION['fbId'], "grabDBId" => true));
+
 
 //settings
 $_linkout_video 		= "FLASH_1200K_640X360";
@@ -133,10 +135,13 @@ if (isset($gameId) && strlen($gameId) > 0){
 									// echo("</pre>");
 									
 									if ($milestone["highlight"]){
+										$goalId = $milestone["highlight"]["mediaPlaybackId"];
 										$game["goals"][$goal_ctr]["description"]  	= $milestone["highlight"]["description"];
-										$game["goals"][$goal_ctr]["goalId"] 		= $milestone["highlight"]["mediaPlaybackId"];
-										$game["goals"][$goal_ctr]["gifUri"] 		= getGif($milestone["highlight"]["mediaPlaybackId"], $pdo);
-										$game["goals"][$goal_ctr]["shortGifUri"] 	= getGif($milestone["highlight"]["mediaPlaybackId"], $pdo, true);
+										$game["goals"][$goal_ctr]["goalId"] 		= $goalId;
+										$game["goals"][$goal_ctr]["gifUri"] 		= getGif($goalId, $pdo);
+										$game["goals"][$goal_ctr]["shortGifUri"] 	= getGif($goalId, $pdo, true);
+										$game["goals"][$goal_ctr]["favorited"] 		= userFav( array("userId" => $userId, "goalId" => $goalId) );
+										$game["goals"][$goal_ctr]["popularity"] 	= getHighlightFavs($goalId);
 									
 										$pbs = isset($milestone["highlight"]["playbacks"]) ? $milestone["highlight"]["playbacks"] : null;
 										if($pbs){

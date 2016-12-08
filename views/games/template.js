@@ -164,4 +164,19 @@ $(document).ready(function(){
 			});
 		}
 	});
+
+	$('i.favorite').on('click', function(e){
+		e.preventDefault();
+		var goalId = $(this).closest('.goal').find('.goalGif, .goalPlaceholder').attr('data-playbackId');
+		// console.log(userId);
+		$.post({
+			url: "/static/scripts/favorite.php",
+			data: {
+				goalId: goalId
+			},
+			success: function(r){
+				// console. log("Response: "+r);
+			}
+		});
+	});
 });

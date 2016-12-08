@@ -9,5 +9,3 @@ echo("<div class='row'>");
 		echo("<table></table>");
 	echo("</div>");
 echo("</div>");
-
-echo('<script src="/static/scripts/vendor/pikaday-1.5.1/pikaday.js"></script>');

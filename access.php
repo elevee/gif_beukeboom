@@ -37,7 +37,7 @@ function userIsLoggedIn($u = null){ //for FB users: pass in $user array
 
 		if( userInDB( array("fbId" => $u["id"]) ) ){
 			$_SESSION['loggedIn'] = true;
-			// $_SESSION['email'] = $u["email"];
+			$_SESSION['fbId'] = $u["id"];
 		}
 	}
 	
@@ -59,6 +59,7 @@ function userIsLoggedIn($u = null){ //for FB users: pass in $user array
 			unset($_SESSION['loggedIn']);
 			unset($_SESSION['email']);
 			unset($_SESSION['password']);
+			unset($_SESSION['fbId']);
 			$state['loginError'] = "The specified email address or password was incorrect.";
 			return false;
 		}

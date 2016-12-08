@@ -125,6 +125,13 @@ h7 {
 	opacity: 0.7;
 }
 
+/*ICONS*/
+
+.fa-heart, .fa-heart-o {
+	color: red;
+	cursor: pointer;
+}
+
 /**** PLAY/LOADING ICONS ****/
 .goalGif i { /*for icons in all states*/
 	position: absolute;

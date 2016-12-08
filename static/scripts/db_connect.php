@@ -4,15 +4,6 @@
 // ini_set('default_socket_timeout', 300);
 // ini_set("default_socket_timeout", 2);
 // include_once("../../path.php"); //for uniform path on includes
-// if (file_exists("../../_env.php")){  //Dev
-// 	include_once("../../_env.php");
-// } else if (file_exists($_SERVER["DOCUMENT_ROOT"]."/_env.php")){ //Prod
-// 	include_once($_SERVER["DOCUMENT_ROOT"]."/_env.php");
-// }
-// set_include_path(get_include_path() . PATH_SEPARATOR . $_SERVER["DOCUMENT_ROOT"]);
-// echo("<br> Include path". get_include_path(). "<br>");
-// echo("<br> Current working directory: ". getcwd(). "<br>");
-// $bl = dirname(__FILE__)."/../../_env.php";
 $path = dirname(__FILE__)."/../../_env.php";
 include($path);
 
@@ -47,6 +38,7 @@ try {
 function userInDB($u){ //array takes either email + pw or just fbId
 	// echo("checking to see if ". $email." with the password ". $pw ." is in the DB. <br>");
 	global $pdo;
+
 	if(isset($u["fbId"]) && is_string($u["fbId"]) ){ //FB users
 		try {
 			$sql = "SELECT id FROM users WHERE fbId = :fbId";
@@ -59,7 +51,13 @@ function userInDB($u){ //array takes either email + pw or just fbId
 			exit();
 		}
 		$row = $s->fetch();
-		if ($row[0] > 0){ return true; }
+		if ($row[0] > 0){ 
+			// if(isset($u["grabDBId"]) ){ //gotta delete this and just have the function return user id
+				return $row[0];
+			// } else {
+			// 	return true; 
+			// }
+		}
 	}
 	if(isset($u["email"]) && is_string($u["email"]) && isset($u["pw"]) && is_string($u["pw"])){
 		try {
@@ -260,13 +258,74 @@ function getGif($goalId, &$pdo, $isShortGif = false){
 	return false;
 }
 
-function needsSeeding($apiResponse){
-	// determine whether we need to run seedgifs script
-	// return true to always refresh upon game detail load.
-	if (isset($apiResponse) && is_array($apiResponse)){
-
+function addFavorite($o){ //options: takes userId, goalId
+	global $pdo;
+	if ( isset($o["userId"]) && isset($o["goalId"]) ){
+		try {
+			$sql = "INSERT INTO favorites (userId, highlightId) VALUES (:userId, :goalId);";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindValue(':userId', $o['userId']);
+			$stmt->bindValue(':goalId', $o['goalId']);
+			// echo("Adding favorite ".$o['goalId']." to userId ".$o["userId"]."'s favorites. \n");
+			return $stmt->execute(); //true if successful
+		} catch (PDOException $e) {
+			echo("Error adding Goal ".$o['goalId']." to Favorites table of DB.\n". $e);
+		}
 	}
+	return null;
+}
 
-	//Compare goal totals from API with SQL statement
-	return false;
+function removeFavorite($o){ //options: takes userId, goalId
+	global $pdo;
+	if ( isset($o["userId"]) && isset($o["goalId"]) ){
+		try {
+			$sql = "DELETE FROM favorites WHERE userId = :userId AND highlightId = :goalId;";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindValue(':userId', $o['userId']);
+			$stmt->bindValue(':goalId', $o['goalId']);
+			echo("Deleting ".$o["goalId"]." from User ".$o["userId"]."'s favorites \n");
+			return $stmt->execute(); //true if successful
+		} catch (PDOException $e) {
+			echo("Error removing favorited goal ".$o["goalId"]." from ".$o["userId"]."'s favorites. \n". $e);
+		}
+	}
+	return null;
+}
+
+function userFav($o){
+	global $pdo;
+	if ( isset($o["userId"]) && isset($o["goalId"]) ){
+		try {
+			$sql = "SELECT COUNT(*) FROM favorites WHERE userId = :userId AND highlightId = :goalId;";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindValue(':userId', $o['userId']);
+			$stmt->bindValue(':goalId', $o['goalId']);
+			$stmt->execute(); //true if successful
+			$count = $stmt->fetch();
+			if ($count[0] > 0){ //fetch returns an array
+				return true;
+			}
+		} catch (PDOException $e) {
+			echo("Error fetching goal favorited info for ".$o["userId"]." from ".$o["userId"]."on goal ".$o["goalId"].". \n". $e);
+		}
+	}
+	return null;
+}
+
+function getHighlightFavs($goalId){
+	global $pdo;
+	if(isset($goalId)){
+		try {
+			$sql = "SELECT COUNT(*) FROM favorites WHERE highlightId = :goalId;";
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindValue(':goalId', $goalId);
+			$stmt->execute();
+			$count = $stmt->fetch();
+			if (isset($count[0])){ //fetch returns an array
+				return $count[0];
+			}
+		} catch (PDOException $e) {
+			echo("Error getting favorites total for ".$goalId.". \n". $e);
+		}
+	}
 }
