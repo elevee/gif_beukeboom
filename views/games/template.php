@@ -14,9 +14,9 @@ function displayGoals($period, $goals, &$applicablePeriods) {
 		}
 		foreach ($goals as $k => $gl) {
 			if($gl["period"] == $period){
-				echo "<pre>";
-				print_r($gl);
-				echo "</pre>";
+				// echo "<pre>";
+				// print_r($gl);
+				// echo "</pre>";
 				$output .= "<div class='goal ". ($gl["isHomeTeam"] ? "home":"away")."Goal'>";
 					$output .= "<span class='name'>".$gl["scorer"]."</span>";
 					if ($period !== "5"){ //shootout goals apparently don't count towards goal total
@@ -123,10 +123,10 @@ if(isset($game) && is_array($game)){
 			echo("</div>");
 		echo("</div>");
 		echo("<div class='row row-padding'>");
-		 echo("<ul class='goals accordion large-12 columns' data-accordion role='tablist'>");
+		 echo("<ul class='goals accordion large-12 columns' data-accordion role='tablist' data-multi-expand='false' data-allow-all-closed='true'>");
 		  echo("<li class='accordion-navigation'>");
 		        echo("<a href='#period1' role='tab' class='accordion-title' id='period1-heading' aria-controls='period1'>First Period</a>");
-		        echo("<div id='period1' class='accordion-content active' role='tabpanel' data-tab-content aria-labelledby='period1-heading'>");
+		        echo("<div id='period1' class='accordion-content' role='tabpanel' data-tab-content aria-labelledby='period1-heading'>");
 	        		echo(displayGoals("1", $game["goals"], $applicablePeriods));
 		        echo("</div>");
 		    echo("</li>");

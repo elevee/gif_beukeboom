@@ -117,12 +117,8 @@ $(document).ready(function(){
 		image[index].src = gifs[index];
 	});
 
-	// so accordion will collapse and expand as expected
-	$('.accordion-title').click(function(accordion){
-		$this = $(this);
-		$content = $this.next('.accordion-content');
-		$content.is(':visible') ? $content.slideUp() : $content.slideDown();
-	});
+	// Spin open first period on load
+	$(".accordion-title[href='#period1']").click();
 
 	//When trim button is pressed on a goal
 	$('.trim').click(function(e){
@@ -168,14 +164,21 @@ $(document).ready(function(){
 	$('i.favorite').on('click', function(e){
 		e.preventDefault();
 		var goalId = $(this).closest('.goal').find('.goalGif, .goalPlaceholder').attr('data-playbackId');
-		// console.log(userId);
+		var $this = $(this);
 		$.post({
 			url: "/static/scripts/favorite.php",
 			data: {
 				goalId: goalId
 			},
 			success: function(r){
-				// console. log("Response: "+r);
+				var _r = JSON.parse(r);
+				if (_r['result'] == "added"){
+					// console.log("added!")
+					$this.removeClass('fa-heart-o').addClass('fa-heart');
+				} else {
+					// console.log("other");
+					$this.removeClass('fa-heart').addClass('fa-heart-o');
+				}
 			}
 		});
 	});

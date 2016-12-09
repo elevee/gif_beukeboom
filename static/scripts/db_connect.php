@@ -269,7 +269,7 @@ function addFavorite($o){ //options: takes userId, goalId
 			// echo("Adding favorite ".$o['goalId']." to userId ".$o["userId"]."'s favorites. \n");
 			return $stmt->execute(); //true if successful
 		} catch (PDOException $e) {
-			echo("Error adding Goal ".$o['goalId']." to Favorites table of DB.\n". $e);
+			// echo("Error adding Goal ".$o['goalId']." to Favorites table of DB.\n". $e);
 		}
 	}
 	return null;
@@ -283,10 +283,10 @@ function removeFavorite($o){ //options: takes userId, goalId
 			$stmt = $pdo->prepare($sql);
 			$stmt->bindValue(':userId', $o['userId']);
 			$stmt->bindValue(':goalId', $o['goalId']);
-			echo("Deleting ".$o["goalId"]." from User ".$o["userId"]."'s favorites \n");
+			// echo("Deleting ".$o["goalId"]." from User ".$o["userId"]."'s favorites \n");
 			return $stmt->execute(); //true if successful
 		} catch (PDOException $e) {
-			echo("Error removing favorited goal ".$o["goalId"]." from ".$o["userId"]."'s favorites. \n". $e);
+			// echo("Error removing favorited goal ".$o["goalId"]." from ".$o["userId"]."'s favorites. \n". $e);
 		}
 	}
 	return null;

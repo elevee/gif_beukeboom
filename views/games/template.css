@@ -132,6 +132,11 @@ h7 {
 	cursor: pointer;
 }
 
+.popularity {
+	margin-left: 2px;
+	color: red;
+}
+
 /**** PLAY/LOADING ICONS ****/
 .goalGif i { /*for icons in all states*/
 	position: absolute;
