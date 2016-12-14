@@ -73,6 +73,8 @@ function uploadGif($goal, &$s3, $isShortGif = false) {
 			return array(
 				'id' 		=> $goal["id"],
 				'gameId' 	=> $goal["gameId"],
+				'playerId'	=> $goal["playerId"],
+				'teamId'	=> $goal["teamId"],
 				'uri' 		=> $res["ObjectURL"],
 				'videoUri'  => $goal["videoUri"]
 			);

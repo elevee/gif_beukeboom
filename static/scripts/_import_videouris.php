@@ -35,7 +35,7 @@ if (isset($m) && isset($days_of_month) ){
 				echo("Processing game ". $gameId . "\n");
 				foreach ($goals as $goal) {
 					// Check to see if we already have that goal
-					if(gifExists($goal['id'], $pdo)) {
+					if(gifExists($goal['id'])) {
 						// echo("Gif for goal ".$goal['id']." EXISTS!\n");
 						try {
 							$sql = "UPDATE highlights SET video_uri = :videoUri WHERE id = :id"; //(id, type, gameId, gif_uri, video_uri) VALUES (:id, :type, :gameId, :uri, :videoUri);";

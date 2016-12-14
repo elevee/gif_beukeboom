@@ -140,13 +140,15 @@ function addGameToDB($gameId, &$pdo){
 
 function addGifToDB($goal, &$pdo){
 	if (isset($goal) && is_array($goal)){
-		if(!gifExists($goal['id'], $pdo)){
+		if(!gifExists($goal['id'])){
 			try {
-				$sql = "INSERT INTO highlights (id, type, gameId, gif_uri, video_uri) VALUES (:id, :type, :gameId, :uri, :videoUri);";
+				$sql = "INSERT INTO highlights (id, type, gameId, playerId, teamId, gif_uri, video_uri) VALUES (:id, :type, :gameId, :playerId, :teamId, :uri, :videoUri);";
 				$stmt = $pdo->prepare($sql);
 				$stmt->bindValue(':id', $goal['id']);
 				$stmt->bindValue(':type', 'GOAL');
 				$stmt->bindValue(':gameId', $goal['gameId']);
+				$stmt->bindValue(':playerId', $goal['playerId']);
+				$stmt->bindValue(':teamId', $goal['teamId']);
 				$stmt->bindValue(':uri', $goal['uri']);
 				$stmt->bindValue(':videoUri', $goal['videoUri']);
 				echo("Adding Goal ".$goal['id']." to DB. \n");
@@ -163,7 +165,7 @@ function addGifToDB($goal, &$pdo){
 
 function addShortGifToDB($goal, &$pdo){
 	if (isset($goal) && is_array($goal)){
-		if(gifExists($goal['id'], $pdo)){
+		if(gifExists($goal['id'])){
 			try {
 				$sql = "UPDATE highlights SET short_gif_uri = :shortGifUri WHERE id = :id";
 				$stmt = $pdo->prepare($sql);
@@ -184,7 +186,7 @@ function addShortGifToDB($goal, &$pdo){
 function deleteGifFromDB($goalId){
 	global $pdo;
 	if (isset($goal) && is_array($goal)){
-		if(gifExists($goalId, $pdo)){
+		if(gifExists($goalId)){
 			try {
 				$sql = "DELETE FROM highlights WHERE id = :goalId;";
 				$stmt = $pdo->prepare($sql);
@@ -215,7 +217,8 @@ function seedGifsFromDay($day){
 }
 // seedGifsFromDay("2016-10-25");
 
-function gifExists($goalId, &$pdo){
+function gifExists($goalId){
+	global $pdo;
 	//Find out if we already converted the GIF
 	if(isset($goalId)){
 		try {
@@ -328,4 +331,34 @@ function getHighlightFavs($goalId){
 			echo("Error getting favorites total for ".$goalId.". \n". $e);
 		}
 	}
+}
+
+function boomBoardQuery($o){
+	global $pdo;
+	$o["type"] 		= isset($o["type"]) ? $o["type"] : "season";
+	$o["season"] 	= isset($o["season"]) ? $o["season"] : "2016/17";
+	// $o["limit"]		= 15;
+	$output = array();
+	try {
+		$sql = "SELECT * FROM highlights ORDER BY popularity DESC LIMIT 15;";
+		$stmt = $pdo->prepare($sql);
+		// $stmt->bindValue(':lim', $o["limit"]);
+		$stmt->execute();
+		foreach ($stmt as $i => $row)
+		{
+		    $output[$i]["id"] 				= $row["id"];
+		    $output[$i]["gameId"] 			= $row["gameId"];
+		    $output[$i]["playerId"] 		= $row["playerId"];
+		    $output[$i]["teamId"] 			= $row["teamId"];
+		    $output[$i]["gifUri"] 			= $row["gif_uri"];
+		    $output[$i]["shortGifUri"] 		= $row["short_gif_uri"];
+		    $output[$i]["videoUri"] 		= $row["video_uri"];
+		    $output[$i]["popularity"] 		= $row["popularity"];
+		    $output[$i]["timestamp"] 		= $row["timestamp"];
+		}
+	} catch (PDOException $e){
+		echo("Error getting BoomBoard Query for ".$o["type"].". \n". $e);
+	}
+	// print_r($output);
+	return $output;
 }

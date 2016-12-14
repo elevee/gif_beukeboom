@@ -27,8 +27,8 @@ if(isset($games) && is_array($games) && count($games) > 0){
 	foreach ($games as $i => $g) {
 		$toProcess[$g] = getGoalsForGame(strval($g));
 	}
-	// echo("PROCESS: \n");
-	// print_r($toProcess);
+	echo("PROCESS: \n");
+	print_r($toProcess);
 
 	// echo("\n");
 	foreach($toProcess as $gameId => $goals){
@@ -40,7 +40,9 @@ if(isset($games) && is_array($games) && count($games) > 0){
 				$gif_settings = array(
 					"gameId" 	=> $gameId,
 					"id"		=> $goal["id"],
-					"videoUri"	=> $goal["videoUri"]
+					"playerId"  => $goal["playerId"],
+					"teamId"  	=> $goal["teamId"],
+					"videoUri"	=> $goal["videoUri"],
 				);
 				if ( $g = createGif($gif_settings) ){
 					$response = uploadGif($g, $s3);

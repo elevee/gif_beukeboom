@@ -6,11 +6,6 @@ include_once(dirname(__FILE__)."/../../static/scripts/db_connect.php");
 $gameId = trim($state['id']); //scrub ID somehow to rid it of injection
 $userId = userInDB(array("fbId" => $_SESSION['fbId'], "grabDBId" => true));
 
-
-//settings
-$_linkout_video 		= "FLASH_1200K_640X360";
-$_placeholder_image 	= "372x210";
-
 function findStandingsFor($res, $teamId, $type){ //type "conference", "division"
 	if(isset($res) && is_array($res)){
 		$str = "";
@@ -136,30 +131,14 @@ if (isset($gameId) && strlen($gameId) > 0){
 									
 									if ($milestone["highlight"]){
 										$goalId = $milestone["highlight"]["mediaPlaybackId"];
-										$game["goals"][$goal_ctr]["description"]  	= $milestone["highlight"]["description"];
-										$game["goals"][$goal_ctr]["goalId"] 		= $goalId;
-										$game["goals"][$goal_ctr]["gifUri"] 		= getGif($goalId, $pdo);
-										$game["goals"][$goal_ctr]["shortGifUri"] 	= getGif($goalId, $pdo, true);
-										$game["goals"][$goal_ctr]["favorited"] 		= userFav( array("userId" => $userId, "goalId" => $goalId) );
-										$game["goals"][$goal_ctr]["popularity"] 	= getHighlightFavs($goalId);
-									
-										$pbs = isset($milestone["highlight"]["playbacks"]) ? $milestone["highlight"]["playbacks"] : null;
-										if($pbs){
-											foreach ($pbs as $k => $v) {
-												if($v["name"] == $_linkout_video){
-													$game["goals"][$goal_ctr]["video_linkout"]	= $v["url"];
-												}
-											}
-										}
-										// Image previews if GIF hasn't processed yet
-										$prevs = isset($milestone["highlight"]["image"]) ? $milestone["highlight"]["image"]["cuts"] : null;
-										if($prevs){
-											foreach ($prevs as $k => $v) {
-												if($k == $_placeholder_image){
-													$game["goals"][$goal_ctr]["placeholder_img"] = $v["src"];
-												}
-											}
-										}
+										$game["goals"][$goal_ctr]["description"]  		= $milestone["highlight"]["description"];
+										$game["goals"][$goal_ctr]["goalId"] 			= $goalId;
+										$game["goals"][$goal_ctr]["gifUri"] 			= getGif($goalId, $pdo);
+										$game["goals"][$goal_ctr]["shortGifUri"] 		= getGif($goalId, $pdo, true);
+										$game["goals"][$goal_ctr]["favorited"] 			= userFav( array("userId" => $userId, "goalId" => $goalId) );
+										$game["goals"][$goal_ctr]["popularity"] 		= getHighlightFavs($goalId);
+										$game["goals"][$goal_ctr]["videoLinkout"]		= fetchMedia("video", $milestone, "FLASH_1200K_640X360");
+										$game["goals"][$goal_ctr]["placeholderImg"] 	= fetchMedia("placeholder", $milestone, "372x210"); // Image previews if GIF hasn't processed yet
 									}
 									// echo($scorer.":  ".$milestone['gifUri']."?<br>");
 									break;

@@ -60,3 +60,83 @@
   font-size: 11px;
   text-align: center;
 }
+
+/*ICONS*/
+
+.fa-heart, .fa-heart-o {
+  color: red;
+  cursor: pointer;
+}
+
+.popularity {
+  margin-left: 2px;
+  color: red;
+}
+
+/*GIFS*/
+.goal {
+  position: relative;
+}
+
+.goalGif, .goalPlaceholder {
+  width: 400px;
+  margin-top: 3px;
+}
+
+.goalGif {
+  cursor: pointer;
+}
+
+/**** PLAY/LOADING ICONS ****/
+.goalGif i { /*for icons in all states*/
+  position: absolute;
+  right: 165px;
+  top: 75px;
+  color: white; /*#D9DDDE;*/
+  text-shadow: 0px 0px 15px black;
+  display: none; /*by default*/
+}
+
+.goalGif.paused img {
+  opacity: 0.7;
+}
+
+.paused i.fa-play {
+  display: block;
+  right: 165px;
+  top: 75px;
+}
+.goalGif:hover i.fa-play {
+  /*color: white;*/
+  text-shadow: 0px 0px 35px blue;
+}
+
+.loading i.fa-spin {
+  display: block;
+  right: 160px;
+  top: 82px;
+}
+/********/
+
+.goal img {
+  width: 100%;
+}
+
+.goalPlaceholder img {
+  opacity: 0.7;
+}
+
+/*TRIM GOAL MODAL*/
+#trimModal {
+  width: 800px;
+}
+
+#trimModal .emphasis {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.trimVideo {
+  width: 150px;
+  border-radius: 5px;
+}

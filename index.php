@@ -106,7 +106,8 @@ $state["title"]  = isset($_SESSION['loggedIn']) ? "GIF Beukeboom | Login" : "GIF
 $views = array(
 	// "/"			=> "Home",
 	"home"      => "Home",
-	"games" 	=> "Game"
+	"games" 	=> "Game",
+	"boomboard" => "BoomBoard"
 );
 
 // on each page load we want to know what the request uri is for the page, this is the part of the url which follows the domain name of the site...

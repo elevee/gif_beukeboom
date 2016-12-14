@@ -91,10 +91,6 @@ h7 {
 	font-size: 20px;
 }
 
-.goal {
-	position: relative;
-}
-
 .awayGoal i {
 	margin-right: 3px;
 }
@@ -102,14 +98,9 @@ h7 {
 	margin-left: 3px;
 }
 
-.goalGif, .goalPlaceholder {
-	width: 400px;
-	margin-top: 3px;
-}
-
-.goalGif {
+/*.goalGif {
 	cursor: pointer;
-}
+}*/
 
 .homeGoal .goalGif, .homeGoal .goalPlaceholder {
 	margin-left: auto;
@@ -121,39 +112,38 @@ h7 {
     margin-right: auto;
 }
 
-.goalGif.paused img {
-	opacity: 0.7;
-}
-
 /*ICONS*/
 
-.fa-heart, .fa-heart-o {
+/*.fa-heart, .fa-heart-o {
 	color: red;
 	cursor: pointer;
-}
+}*/
 
-.popularity {
+/*.popularity {
 	margin-left: 2px;
 	color: red;
-}
+}*/
 
 /**** PLAY/LOADING ICONS ****/
-.goalGif i { /*for icons in all states*/
+/*for icons in all states*/
+     /*#D9DDDE;*/
+     /*display none by default*/
+/*.goalGif i { 
 	position: absolute;
 	right: 165px;
 	top: 75px;
-	color: white; /*#D9DDDE;*/
+	color: white; 
 	text-shadow: 0px 0px 15px black;
-	display: none; /*by default*/
-}
+	display: none; 
+}*/
 
-.paused i.fa-play {
+/*.paused i.fa-play {
 	display: block;
 	right: 165px;
 	top: 75px;
-}
-.goalGif:hover i.fa-play {
-	/*color: white;*/
+}*/
+
+/*.goalGif:hover i.fa-play {
 	text-shadow: 0px 0px 35px blue;
 }
 
@@ -161,12 +151,12 @@ h7 {
 	display: block;
 	right: 160px;
 	top: 82px;
-}
+}*/
 /********/
 
-.goal img {
+/*.goal img {
 	width: 100%;
-}
+}*/
 
 .goal .time {
 	/*text-align: center;*/
@@ -175,12 +165,12 @@ h7 {
     left: 48%;
 }
 
-.goalPlaceholder img {
+/*.goalPlaceholder img {
 	opacity: 0.7;
-}
+}*/
 
 /*TRIM GOAL MODAL*/
-#trimModal {
+/*#trimModal {
 	width: 800px;
 }
 
@@ -192,4 +182,4 @@ h7 {
 .trimVideo {
 	width: 150px;
 	border-radius: 5px;
-}
+}*/

@@ -1,0 +1,16 @@
+.rank {
+	font-size: 36px;
+	text-align: center;
+}
+
+.popularity {
+	font-size: 24px;
+}
+
+.goalPlaceholder .processing {
+	position: absolute;
+	top: 100px;
+	left: 150px;
+	width: 100%; 
+	font-size: 20px;
+}

@@ -78,7 +78,9 @@ function getGoalsForGame($gameId){
 						}
 						$goals[] = array(
 							"id" => strval($milestone["highlight"]["mediaPlaybackId"]),
-							"videoUri" => $playbackUrl
+							"videoUri" => $playbackUrl,
+							"playerId"	=> $milestone["playerId"],
+							"teamId"	=> $milestone["teamId"]
 						);
 					}
 				}
@@ -209,6 +211,63 @@ function getScoreInfo($goalInfo, $gameId){
 			//  'scoringTeam' => 'TOR'
 			//  'gameId'    => '4848484'
 			// );
+		}
+	}
+	return null;
+}
+
+function getTeamScoredOn($o){ //takes "gameId", "teamId"
+	$sched_uri 		= "https://statsapi.web.nhl.com/api/v1/schedule?gamePk=".$o["gameId"]."&expand=schedule.teams&site=en_nhl";
+	$schedRes = json_decode(CallAPI('GET', $sched_uri), true);
+	if(isset($schedRes) && isset($schedRes["dates"][0]["games"][0]) && is_array($schedRes["dates"][0]["games"][0]) ){
+		$teams = $schedRes["dates"][0]["games"][0]["teams"];
+		foreach ($teams as $team) {
+			if($team["team"]["id"] !== $o["teamId"]){
+				return array(
+					"teamName" => $team["team"]["teamName"],
+					"abbreviation" => $team["team"]["abbreviation"]
+				);
+			}
+		}
+	}
+	return null;
+}
+
+function getScorer($playerId){
+	$player_uri = "https://statsapi.web.nhl.com/api/v1/people/".$playerId;
+	$playerRes = json_decode(CallAPI('GET', $player_uri), true);
+	if(isset($playerRes) && is_array($playerRes) ){
+		return array(
+			"fullName" => $playerRes["people"][0]["fullName"]
+		);
+	}
+	return null;
+}
+
+function fetchMedia($type, $milestone, $preferredSize){
+	if(isset($milestone) && isset($milestone["highlight"]["image"])){
+		$choices = $type == "placeholder" ? $milestone["highlight"]["image"]["cuts"] : $milestone["highlight"]["playbacks"];
+		if(isset($choices) && isset($preferredSize)){
+			foreach ($choices as $k => $v) {
+				if( ($type == "placeholder" ? $k == $preferredSize : $v["name"] == $preferredSize) ){
+					return ($type == "placeholder" ? $v["src"] : $v["url"]);
+				}
+			}
+		}
+	}
+	return null;
+}
+
+function fetchMilestoneForGoal($gameId, $goalId){
+	$media_uri = "https://statsapi.web.nhl.com/api/v1/game/".$gameId."/content";
+	// 2016020052 game
+	// 45497603 goal
+	$mediaRes = json_decode(CallAPI('GET', $media_uri), true);
+	if(isset($mediaRes) && isset($mediaRes["media"]["milestones"]["items"]) && is_array($mediaRes["media"]["milestones"]["items"]) ){
+		foreach ($mediaRes["media"]["milestones"]["items"] as $key => $milestone) {
+			if(is_array($milestone["highlight"]) && count($milestone["highlight"] > 0) && isset($milestone["highlight"]["mediaPlaybackId"]) && $milestone["highlight"]["mediaPlaybackId"] == $goalId){
+				return $milestone;
+			}
 		}
 	}
 	return null;
